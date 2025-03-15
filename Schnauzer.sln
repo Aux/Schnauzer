@@ -1,0 +1,33 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.12.35707.178
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Schnauzer", "src\Schnauzer\Schnauzer.csproj", "{B4E3A3E4-FDEC-4649-81DD-7FA1D20692C0}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Schnauzer.Core", "src\Schnauzer.Core\Schnauzer.Core.csproj", "{DC5565B5-EE2D-49AA-AF48-ECE7A2B21821}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "workflows", "workflows", "{C345ABE9-EFEC-4C19-82B4-C6DE32BBDD56}"
+	ProjectSection(SolutionItems) = preProject
+		.github\workflows\push_container.yml = .github\workflows\push_container.yml
+	EndProjectSection
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{B4E3A3E4-FDEC-4649-81DD-7FA1D20692C0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B4E3A3E4-FDEC-4649-81DD-7FA1D20692C0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B4E3A3E4-FDEC-4649-81DD-7FA1D20692C0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B4E3A3E4-FDEC-4649-81DD-7FA1D20692C0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DC5565B5-EE2D-49AA-AF48-ECE7A2B21821}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DC5565B5-EE2D-49AA-AF48-ECE7A2B21821}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DC5565B5-EE2D-49AA-AF48-ECE7A2B21821}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DC5565B5-EE2D-49AA-AF48-ECE7A2B21821}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
