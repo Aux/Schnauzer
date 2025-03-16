@@ -30,8 +30,13 @@ using var host = Host.CreateDefaultBuilder(args)
         });
 
         services.AddHostedService<DiscordStartupService>();
-        //services.AddHostedService<InteractionHandlingService>();
+        services.AddHostedService<InteractionHandlingService>();
+
+        services.AddHostedService<GuildMembershipService>();
+        services.AddHostedService<VoiceStateService>();
     })
     .Build();
+
+host.Services.GetRequiredService<SchnauzerDb>().Database.EnsureCreated();
 
 await host.RunAsync();

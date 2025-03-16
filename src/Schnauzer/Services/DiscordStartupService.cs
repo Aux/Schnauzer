@@ -15,7 +15,7 @@ public class DiscordStartupService(
     public async Task StartAsync(CancellationToken cancellationToken)
     {
         discord.Log += msg => LogHelper.OnLogAsync(logger, msg);
-        await discord.LoginAsync(TokenType.Bot, config["schnauzer_discord"]);
+        await discord.LoginAsync(TokenType.Bot, config["SCHNAUZER_DISCORD"]);
         await discord.StartAsync();
     }
 

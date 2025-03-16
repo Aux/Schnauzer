@@ -16,7 +16,6 @@ public static class Registry
             services.AddTransient<DiscordRestClient>();
             services.AddSingleton(_ => new DiscordSocketClient(new()
             {
-                AlwaysDownloadUsers = true,
                 GatewayIntents = GatewayIntents.Guilds | GatewayIntents.GuildVoiceStates,
                 LogLevel = LogSeverity.Verbose,
                 MessageCacheSize = 0,

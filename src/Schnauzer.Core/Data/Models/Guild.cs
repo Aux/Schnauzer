@@ -6,5 +6,5 @@ public class Guild
     public ulong? CreateChannelId { get; set; }
     public bool? IsBanned { get; set; }
 
-    public List<DynamicChannel>? DynamicChannels { get; set; }
+    public List<DynamicChannel> DynamicChannels { get; set; }
 }

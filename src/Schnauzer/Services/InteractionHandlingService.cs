@@ -3,6 +3,7 @@ using Discord.Interactions;
 using Discord.WebSocket;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using Schnauzer.Interactions;
 
 namespace Schnauzer.Services;
 
@@ -19,7 +20,8 @@ public class InteractionHandlingService(
         discord.Ready += () => interactions.RegisterCommandsGloballyAsync(true);
         discord.InteractionCreated += OnInteractionAsync;
 
-        //await interactions.AddModuleAsync<>(services);
+        await interactions.AddModuleAsync<AdminModule>(services);
+        await interactions.AddModuleAsync<VoicePanelModule>(services);
     }
 
     public Task StopAsync(CancellationToken cancellationToken)
