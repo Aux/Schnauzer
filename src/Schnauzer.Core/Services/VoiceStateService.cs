@@ -11,7 +11,8 @@ namespace Schnauzer.Services;
 public class VoiceStateService(
     ILogger<VoiceStateService> logger,
     DiscordSocketClient discord,
-    SchnauzerDb db
+    SchnauzerDb db,
+    GracePeriodService gracePeriod
     ) : IHostedService
 {
     public Task StartAsync(CancellationToken cancellationToken)
@@ -67,6 +68,8 @@ public class VoiceStateService(
             // The dynamic channel is empty
             if (before.VoiceChannel.ConnectedUsers.Count == 0)
             {
+                gracePeriod.TryStopTimer(before.VoiceChannel, guildUser);
+
                 await before.VoiceChannel.DeleteAsync(new()
                 {
                     AuditLogReason = "Dynamic voice channel is empty."
@@ -81,8 +84,8 @@ public class VoiceStateService(
             // The dynamic channel is orphaned
             if (dynchan.OwnerId == guildUser.Id)
             {
-                await before.VoiceChannel.SendMessageAsync($"Looks like the channel owner has left. Normally I would " +
-                    $"mention that someone could take ownership, but that hasn't been implemented yet 😳");
+                gracePeriod.TryStartTimer(before.VoiceChannel, guildUser);
+                return;
             }
         }
     }

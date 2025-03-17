@@ -29,6 +29,8 @@ using var host = Host.CreateDefaultBuilder(args)
                 $"Database={config["PGDATABASE"]};");
         });
 
+        services.AddSingleton<GracePeriodService>();
+
         services.AddHostedService<DiscordStartupService>();
         services.AddHostedService<InteractionHandlingService>();
 
