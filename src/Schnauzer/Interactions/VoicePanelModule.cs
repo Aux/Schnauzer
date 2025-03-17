@@ -25,6 +25,13 @@ public class VoicePanelModule(
         if (Context.User is not IGuildUser guildUser)
             return;
 
+        var voiceMembers = await channel.GetUsersAsync().FlattenAsync();
+        if (!voiceMembers.Any(x => x.Id == guildUser.Id))
+        {
+            await RespondAsync("You can't claim a channel you aren't currently in.", ephemeral: true);
+            return;
+        }
+
         var config = await db.Guilds
             .Include(x => x.DynamicChannels.Where(x => x.Id == channel.Id))
             .SingleOrDefaultAsync(x => x.Id == Context.Guild.Id);
@@ -36,7 +43,7 @@ public class VoicePanelModule(
             return;
         }
 
-        if (!guildUser.RoleIds.Intersect(config.CanOwnRoleIds).Any())
+        if (config.CanOwnRoleIds != null && !guildUser.RoleIds.Intersect(config.CanOwnRoleIds).Any())
         {
             await RespondAsync("You do not have a role that allows you to claim ownership of a channel.", ephemeral: true);
             return;
