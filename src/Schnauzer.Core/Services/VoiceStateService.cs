@@ -50,7 +50,18 @@ public class VoiceStateService(
         {
             // The joined channel is Create
             if (after.VoiceChannel.Id == config.CreateChannelId)
+            {
+                // Check if the user already owns a channel
+                var dynchan = config.DynamicChannels?.SingleOrDefault(x => x.OwnerId == guildUser.Id);
+                if (dynchan != null)
+                {
+                    // Move the user to the existing channel
+                    await guildUser.ModifyAsync(x => x.ChannelId = dynchan.Id);
+                    return;
+                }
+
                 await CreateDynamicAsync(config, guildUser);
+            }
             
             return;
         }
