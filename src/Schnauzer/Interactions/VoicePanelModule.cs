@@ -129,19 +129,6 @@ public class VoicePanelModule(
         await RespondAsync($"{Context.User.Mention} updated {channel.Mention} to a limit of `{limit}`", allowedMentions: AllowedMentions.None);
     }
 
-    [ComponentInteraction("manage_button:*")]
-    public async Task ManageChannelAsync(IVoiceChannel channel)
-    {
-        if (!await IsOwnerAsync(channel))
-            return;
-
-        var menu = new SelectMenuBuilder()
-            .WithCustomId("manage_menu:" + channel.Id)
-            .AddOption("Block User", "block_user", "Prevent a user from joining the channel", new Emoji("🔨"))
-            .AddOption("Give Owner", "give_owner", "Give ownership of the channel to another user", new Emoji("❗"));
-
-    }
-
     private Task<bool> IsOwnerAsync(IVoiceChannel channel)
         => db.Channels.AnyAsync(x => x.Id == channel.Id && x.OwnerId == Context.User.Id);
 }

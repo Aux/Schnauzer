@@ -141,11 +141,6 @@ public class VoiceStateService(
             .WithStyle(ButtonStyle.Primary)
             .WithEmote(new Emoji("💺"))
             .WithLabel("User Limit");
-        //var manageButton = new ButtonBuilder()
-        //    .WithCustomId("manage_button:" + dynvoice.Id)
-        //    .WithStyle(ButtonStyle.Secondary)
-        //    .WithEmote(new Emoji("🛠️"))
-        //    .WithLabel("Manage Users");
 
         var components = new ComponentBuilder()
             .WithButton(renameButton)
