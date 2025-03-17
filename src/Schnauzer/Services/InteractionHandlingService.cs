@@ -20,7 +20,7 @@ public class InteractionHandlingService(
         discord.Ready += () => interactions.RegisterCommandsGloballyAsync(true);
         discord.InteractionCreated += OnInteractionAsync;
 
-        await interactions.AddModuleAsync<AdminModule>(services);
+        await interactions.AddModuleAsync<ConfigModule>(services);
         await interactions.AddModuleAsync<VoicePanelModule>(services);
     }
 
