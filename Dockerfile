@@ -10,6 +10,7 @@ FROM mcr.microsoft.com/dotnet/sdk:9.0 AS build
 ARG BUILD_CONFIGURATION=Release
 WORKDIR /build
 COPY ["src/Schnauzer/Schnauzer.csproj", "Schnauzer/"]
+COPY ["src/Schnauzer.Core/Schnauzer.Core.csproj", "Schnauzer/"]
 RUN dotnet restore "./Schnauzer/Schnauzer.csproj"
 COPY . .
 WORKDIR "/build/Schnauzer"
