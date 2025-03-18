@@ -8,17 +8,17 @@ WORKDIR /app
 # This stage is used to build the service project
 FROM mcr.microsoft.com/dotnet/sdk:9.0 AS build
 ARG BUILD_CONFIGURATION=Release
-WORKDIR /src
-COPY ["Schnauzer/Schnauzer.csproj", "Schnauzer/"]
-RUN dotnet restore "./Schnauzer/Schnauzer.csproj"
+WORKDIR /build
+COPY ["src/Schnauzer/Schnauzer.csproj", "Schnauzer/"]
+RUN dotnet restore "./src/Schnauzer/Schnauzer.csproj"
 COPY . .
-WORKDIR "/src/Schnauzer"
-RUN dotnet build "./Schnauzer.csproj" -c $BUILD_CONFIGURATION -o /app/build
+WORKDIR "/build/Schnauzer"
+RUN dotnet build "./src/Schnauzer/Schnauzer.csproj" -c $BUILD_CONFIGURATION -o /app/build
 
 # This stage is used to publish the service project to be copied to the final stage
 FROM build AS publish
 ARG BUILD_CONFIGURATION=Release
-RUN dotnet publish "./Schnauzer.csproj" -c $BUILD_CONFIGURATION -o /app/publish /p:UseAppHost=false
+RUN dotnet publish "./src/Schnauzer/Schnauzer.csproj" -c $BUILD_CONFIGURATION -o /app/publish /p:UseAppHost=false
 
 # This stage is used in production or when running from VS in regular mode (Default when not using the Debug configuration)
 FROM base AS final
