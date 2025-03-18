@@ -1,0 +1,8 @@
+[phases.setup]
+cmds = ['sudo apt-get install -y aspnetcore-runtime-9.0']
+
+[phases.build]
+cmds = ['dotnet publish -c Release']
+
+[start]
+cmd = 'yarn run server:start'
