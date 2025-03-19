@@ -9,11 +9,9 @@ WORKDIR /app
 FROM mcr.microsoft.com/dotnet/sdk:9.0 AS build
 WORKDIR /source
 COPY . ./source
-RUN dotnet build -c Release -o /app/build 
-RUN dotnet publish -c Release -o /app/publish
+RUN dotnet build -c Release -o /build 
+RUN dotnet publish -c Release -o /publish
  
 # This stage is used in production or when running from VS in regular mode (Default when not using the Debug configuration)
-FROM base AS final
-WORKDIR /app
-COPY --from=publish /app/publish .
+WORKDIR /publish
 ENTRYPOINT ["dotnet", "Schnauzer.dll"]
