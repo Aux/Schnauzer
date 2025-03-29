@@ -25,7 +25,10 @@ public class InteractionsHost(
         discord.InteractionCreated += OnInteractionAsync;
 
         await interactions.AddModuleAsync<ConfigModule>(services);
+
         await interactions.AddModuleAsync<VoicePanelModule>(services);
+        await interactions.AddModuleAsync<VoiceOwnerModule>(services);
+        //await interactions.AddModuleAsync<VoiceContextModule>(services);
     }
 
     public Task StopAsync(CancellationToken cancellationToken)
