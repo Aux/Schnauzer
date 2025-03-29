@@ -2,6 +2,7 @@
 using Discord.Interactions;
 using Microsoft.EntityFrameworkCore;
 using Schnauzer.Data;
+using Schnauzer.Discord;
 
 namespace Schnauzer.Interactions;
 
@@ -55,34 +56,38 @@ public class VoicePanelModule(
         {
             new(guildUser.Id, PermissionTarget.User, new OverwritePermissions(
                 moveMembers: PermValue.Allow, muteMembers: PermValue.Allow, deafenMembers: PermValue.Allow,
-                prioritySpeaker: PermValue.Allow, useVoiceActivation: PermValue.Allow, manageMessages: PermValue.Allow))
+                prioritySpeaker: PermValue.Allow, useVoiceActivation: PermValue.Allow))
         };
 
         await channel.ModifyAsync(x =>
         {
             x.PermissionOverwrites = dynamicPerms;
-        });
+        },
+        new RequestOptions { AuditLogReason = $"Transferring ownership to @{guildUser.Username} ({guildUser.Id})" });
 
         dynchan.OwnerId = guildUser.Id;
         db.Update(dynchan);
         await db.SaveChangesAsync();
 
+        var allCommands = await Context.Client.GetGlobalApplicationCommandsAsync();
+        var cmds = allCommands.SingleOrDefault(x => x.Name.StartsWith("voice"));
+
+        // Create channel owner panel
         var panelMsg = (IUserMessage)await channel.GetMessageAsync(dynchan.PanelMessageId.Value);
         var embed = new EmbedBuilder()
-            .WithTitle("Dynamic Voice Channel Controls")
-            .WithDescription($"Owner: {guildUser.Mention}");
+            .WithTitle("Voice Channel Controls")
+            .AddField("Owner", guildUser.Mention)
+            .AddField("Commands", string.Join(" ", cmds.Options.Select(x => $"</{cmds.Name} {x.Name}:{cmds.Id}>")));
 
         await panelMsg.ModifyAsync(x => x.Embed = embed.Build());
 
         await RespondAsync($"{guildUser.Mention} is now the owner of this channel.", allowedMentions: AllowedMentions.None);
     }
 
+    [RequireChannelOwner]
     [ComponentInteraction("rename_button:*")]
     public async Task RenameChannelAsync(IVoiceChannel channel)
     {
-        if (!await IsOwnerAsync(channel))
-            return;
-
         var modal = new ModalBuilder()
             .WithCustomId("rename_modal:" + channel.Id)
             .WithTitle("Rename Voice Channel")
@@ -92,20 +97,19 @@ public class VoicePanelModule(
         await RespondWithModalAsync(modal.Build());
     }
 
+    [RequireChannelOwner]
     [ModalInteraction("rename_modal:*")]
     public async Task RenameChannelModalAsync(IVoiceChannel channel, ModalData modal)
     {
         await channel.ModifyAsync(x => x.Name = modal.NewName, 
             new RequestOptions { AuditLogReason = $"Updated by @{Context.User.Username} ({Context.User.Id})" });
-        await RespondAsync($"{Context.User.Mention} updated the name of {channel.Mention} to `{modal.NewName}`", allowedMentions: AllowedMentions.None);
+        await RespondAsync($"{Context.User.Mention} updated the channel's name to `{modal.NewName}`", allowedMentions: AllowedMentions.None);
     }
 
+    [RequireChannelOwner]
     [ComponentInteraction("limit_button:*")]
     public async Task LimitChannelAsync(IVoiceChannel channel)
     {
-        if (!await IsOwnerAsync(channel))
-            return;
-
         var modal = new ModalBuilder()
             .WithCustomId("limit_modal:" + channel.Id)
             .WithTitle("Change Voice Channel Limit")
@@ -115,6 +119,7 @@ public class VoicePanelModule(
         await RespondWithModalAsync(modal.Build());
     }
 
+    [RequireChannelOwner]
     [ModalInteraction("limit_modal:*")]
     public async Task LimitChannelModalAsync(IVoiceChannel channel, ModalData modal)
     {
@@ -126,9 +131,6 @@ public class VoicePanelModule(
 
         await channel.ModifyAsync(x => x.UserLimit = limit,
             new RequestOptions { AuditLogReason = $"Updated by @{Context.User.Username} ({Context.User.Id})" });
-        await RespondAsync($"{Context.User.Mention} updated {channel.Mention} to a limit of `{limit}`", allowedMentions: AllowedMentions.None);
+        await RespondAsync($"{Context.User.Mention} updated the channel limit to `{limit}`", allowedMentions: AllowedMentions.None);
     }
-
-    private Task<bool> IsOwnerAsync(IVoiceChannel channel)
-        => db.Channels.AnyAsync(x => x.Id == channel.Id && x.OwnerId == Context.User.Id);
 }
