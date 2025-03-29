@@ -1,4 +1,5 @@
 ﻿using Discord;
+using Discord.Interactions;
 using Discord.WebSocket;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Hosting;
@@ -111,7 +112,7 @@ public class VoiceStateService(
         {
             new(user.Id, PermissionTarget.User, new OverwritePermissions(
                 moveMembers: PermValue.Allow, muteMembers: PermValue.Allow, deafenMembers: PermValue.Allow,
-                prioritySpeaker: PermValue.Allow, useVoiceActivation: PermValue.Allow, manageMessages: PermValue.Allow))
+                prioritySpeaker: PermValue.Allow, useVoiceActivation: PermValue.Allow))
         };
 
         // Create the channel
@@ -126,10 +127,14 @@ public class VoiceStateService(
         // Move the user to the new channel
         await user.ModifyAsync(x => x.ChannelId = dynvoice.Id);
 
+        var allCommands = await discord.GetGlobalApplicationCommandsAsync();
+        var cmds = allCommands.SingleOrDefault(x => x.Name.StartsWith("voice"));
+
         // Create channel owner panel
         var embed = new EmbedBuilder()
-            .WithTitle("Dynamic Voice Channel Controls")
-            .WithDescription($"Owner: {user.Mention}");
+            .WithTitle("Voice Channel Controls")
+            .AddField("Owner", user.Mention)
+            .AddField("Commands", string.Join(" ", cmds.Options.Select(x => $"</{cmds.Name} {x.Name}:{cmds.Id}>")));
 
         var renameButton = new ButtonBuilder()
             .WithCustomId("rename_button:" + dynvoice.Id)
