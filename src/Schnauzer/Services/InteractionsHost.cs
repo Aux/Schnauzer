@@ -7,17 +7,21 @@ using Schnauzer.Interactions;
 
 namespace Schnauzer.Services;
 
-public class InteractionHandlingService(
+public class InteractionsHost(
         DiscordSocketClient discord,
         InteractionService interactions,
         IServiceProvider services,
-        ILogger<InteractionHandlingService> logger
+        ILogger<InteractionsHost> logger
     ) : IHostedService
 {
     public async Task StartAsync(CancellationToken cancellationToken)
     {
         interactions.Log += msg => LogHelper.OnLogAsync(logger, msg);
-        discord.Ready += () => interactions.RegisterCommandsGloballyAsync(true);
+        discord.Ready += async () =>
+        {
+            await discord.SetCustomStatusAsync("🎙️ Serving up dynamic voice channels 🎙️");
+            await interactions.RegisterCommandsGloballyAsync(true);
+        };
         discord.InteractionCreated += OnInteractionAsync;
 
         await interactions.AddModuleAsync<ConfigModule>(services);

@@ -6,16 +6,26 @@ using Microsoft.Extensions.Logging;
 
 namespace Schnauzer.Services;
 
-public class DiscordStartupService(
+public class DiscordHost(
         DiscordSocketClient discord,
         IConfiguration config,
-        ILogger<DiscordStartupService> logger
+        ILogger<DiscordHost> logger
     ) : IHostedService
 {
     public async Task StartAsync(CancellationToken cancellationToken)
     {
         discord.Log += msg => LogHelper.OnLogAsync(logger, msg);
-        await discord.LoginAsync(TokenType.Bot, config["SCHNAUZER_DISCORD"]);
+
+#if RELEASE
+        string discordToken = config["SCHNAUZER_DISCORD"];
+#elif DEBUG
+        string discordToken = config["TEST_DISCORD"];
+#endif
+
+        if (string.IsNullOrWhiteSpace(discordToken))
+            throw new Exception("No discord bot token was provided.");
+        
+        await discord.LoginAsync(TokenType.Bot, discordToken);
         await discord.StartAsync();
     }
 

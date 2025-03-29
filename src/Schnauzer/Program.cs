@@ -31,8 +31,8 @@ using var host = Host.CreateDefaultBuilder(args)
 
         services.AddSingleton<GracePeriodService>();
 
-        services.AddHostedService<DiscordStartupService>();
-        services.AddHostedService<InteractionHandlingService>();
+        services.AddHostedService<DiscordHost>();
+        services.AddHostedService<InteractionsHost>();
 
         services.AddHostedService<GuildMembershipService>();
         services.AddHostedService<VoiceStateService>();
