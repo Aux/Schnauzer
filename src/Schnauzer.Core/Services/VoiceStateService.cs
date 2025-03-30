@@ -121,6 +121,7 @@ public class VoiceStateService(
             p.CategoryId = create.CategoryId;
             p.Position = create.Position + 1;
             p.PermissionOverwrites = dynamicPerms;
+            p.UserLimit = 4;
         },
         new RequestOptions { AuditLogReason = $"Created dynamic channel for @{user.Username} ({user.Id})" });
 
