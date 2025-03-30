@@ -80,24 +80,52 @@ public class VoiceOwnerModule(
             return;
         }
 
+        if (channel.PermissionOverwrites.Any(x => x.TargetId == user.Id))
+        {
+            await RespondAsync($"{user.Mention} is already blocked from this channel.", ephemeral: true);
+            return;
+        }
+
         if (user.GuildPermissions.Administrator || user.GuildPermissions.ManageChannels || user.GuildPermissions.BanMembers)
         {
             await RespondAsync($"You can't block server moderators.", ephemeral: true);
             return;
         }
 
-        var dynamicPerms = new List<Overwrite>(channel.PermissionOverwrites)
-        {
-            new(user.Id, PermissionTarget.User, new OverwritePermissions(connect: PermValue.Deny, sendMessages: PermValue.Deny))
-        };
-
-        await channel.ModifyAsync(x =>
-        {
-            x.PermissionOverwrites = dynamicPerms;
-        }, 
-        new RequestOptions { AuditLogReason = $"Blocked by @{Context.User.Username} ({Context.User.Id})\nReason: {reason}" });
+        await channel.AddPermissionOverwriteAsync(user,
+            new OverwritePermissions(connect: PermValue.Deny, sendMessages: PermValue.Deny),
+            new RequestOptions { AuditLogReason = $"Blocked by @{Context.User.Username} ({Context.User.Id})\nReason: {reason}" });
 
         await RespondAsync($"{user.Mention} can no longer join this voice channel.", ephemeral: true);
+    }
+
+    [SlashCommand("unblock", "Unblock a user from a voice channel you own.")]
+    public async Task UnblockAsync(
+        [Summary(description: "The user to be unblocked")]
+        IGuildUser user,
+        [MinLength(1)]
+        [Summary(description: "A short description of why this user is being unblocked")]
+        string reason)
+    {
+        if (Context.Channel is not IVoiceChannel channel)
+            return;
+
+        if (Context.User.Id == user.Id)
+        {
+            await RespondAsync($"You can't unblock yourself 🙄", ephemeral: true);
+            return;
+        }
+
+        if (!channel.PermissionOverwrites.Any(x => x.TargetId == user.Id))
+        {
+            await RespondAsync($"{user.Mention} isn't blocked from this channel.", ephemeral: true);
+            return;
+        }
+
+        await channel.RemovePermissionOverwriteAsync(user, 
+            new RequestOptions { AuditLogReason = $"Unblocked by @{Context.User.Username} ({Context.User.Id})\nReason: {reason}" });
+
+        await RespondAsync($"{user.Mention} is no longer blocked from this channel.", ephemeral: true);
     }
 
     [SlashCommand("transfer", "Transfer ownership of a voice channel to another user.")]
@@ -140,20 +168,12 @@ public class VoiceOwnerModule(
             await RespondAsync($"{user.Mention} does not have a role that allows them to have ownership of a channel.", ephemeral: true);
             return;
         }
-        var category = await channel.GetCategoryAsync();
 
-        var dynamicPerms = new List<Overwrite>(category.PermissionOverwrites)
-        {
-            new(user.Id, PermissionTarget.User, new OverwritePermissions(
-                moveMembers: PermValue.Allow, muteMembers: PermValue.Allow, deafenMembers: PermValue.Allow,
-                prioritySpeaker: PermValue.Allow, useVoiceActivation: PermValue.Allow))
-        };
-
-        await channel.ModifyAsync(x =>
-        {
-            x.PermissionOverwrites = dynamicPerms;
-        },
-        new RequestOptions { AuditLogReason = $"Transferring ownership to @{user.Username} ({user.Id})" });
+        await channel.AddPermissionOverwriteAsync(user, 
+            new OverwritePermissions(moveMembers: PermValue.Allow, muteMembers: PermValue.Allow,
+            deafenMembers: PermValue.Allow, prioritySpeaker: PermValue.Allow, useVoiceActivation: PermValue.Allow));
+        await channel.RemovePermissionOverwriteAsync(Context.Guild.GetUser(dynchan.OwnerId),
+            new RequestOptions { AuditLogReason = $"Transferring ownership to @{user.Username} ({user.Id})" });
 
         dynchan.OwnerId = user.Id;
         db.Update(dynchan);

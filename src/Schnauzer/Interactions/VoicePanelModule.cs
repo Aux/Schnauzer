@@ -50,20 +50,11 @@ public class VoicePanelModule(
             return;
         }
 
-        var category = await channel.GetCategoryAsync();
-
-        var dynamicPerms = new List<Overwrite>(category.PermissionOverwrites)
-        {
-            new(guildUser.Id, PermissionTarget.User, new OverwritePermissions(
-                moveMembers: PermValue.Allow, muteMembers: PermValue.Allow, deafenMembers: PermValue.Allow,
-                prioritySpeaker: PermValue.Allow, useVoiceActivation: PermValue.Allow))
-        };
-
-        await channel.ModifyAsync(x =>
-        {
-            x.PermissionOverwrites = dynamicPerms;
-        },
-        new RequestOptions { AuditLogReason = $"Transferring ownership to @{guildUser.Username} ({guildUser.Id})" });
+        await channel.AddPermissionOverwriteAsync(guildUser,
+            new OverwritePermissions(moveMembers: PermValue.Allow, muteMembers: PermValue.Allow,
+            deafenMembers: PermValue.Allow, prioritySpeaker: PermValue.Allow, useVoiceActivation: PermValue.Allow));
+        await channel.RemovePermissionOverwriteAsync(Context.Guild.GetUser(dynchan.OwnerId),
+            new RequestOptions { AuditLogReason = $"Transferring ownership to @{guildUser.Username} ({guildUser.Id})" });
 
         dynchan.OwnerId = guildUser.Id;
         db.Update(dynchan);
