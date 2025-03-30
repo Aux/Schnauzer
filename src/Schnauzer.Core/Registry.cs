@@ -19,6 +19,7 @@ public static class Registry
                 GatewayIntents = GatewayIntents.Guilds | GatewayIntents.GuildVoiceStates,
                 LogLevel = LogSeverity.Verbose,
                 MessageCacheSize = 0,
+                AuditLogCacheSize = 0,
                 SuppressUnknownDispatchWarnings = true
             }));
             services.AddSingleton(services =>
