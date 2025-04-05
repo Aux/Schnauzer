@@ -29,6 +29,7 @@ using var host = Host.CreateDefaultBuilder(args)
                 $"Database={config["PGDATABASE"]};");
         });
 
+        services.AddSingleton<LocalizationProvider>();
         services.AddSingleton<GracePeriodService>();
 
         services.AddHostedService<DiscordHost>();
@@ -40,5 +41,6 @@ using var host = Host.CreateDefaultBuilder(args)
     .Build();
 
 host.Services.GetRequiredService<SchnauzerDb>().Database.EnsureCreated();
+host.Services.GetRequiredService<LocalizationProvider>();
 
 await host.RunAsync();

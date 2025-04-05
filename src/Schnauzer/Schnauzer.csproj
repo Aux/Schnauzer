@@ -11,4 +11,13 @@
     <ProjectReference Include="..\Schnauzer.Core\Schnauzer.Core.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <None Update="locales\interactions.en.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="locales\messages.en.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
 </Project>

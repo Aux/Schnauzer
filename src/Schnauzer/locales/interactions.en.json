@@ -1,0 +1,110 @@
+{
+  "config": {
+    "name": "config",
+    "description": "A collection of admin-only configuration commands",
+    "show": {
+      "name": "show",
+      "description": "Show this server's current config options."
+    },
+    "set-create-channel": {
+      "name": "set-create-channel",
+      "description": "Set the channel users will join to have a voice channel automatically created.",
+      "channel": {
+        "name": "channel",
+        "description": "channel"
+      }
+    },
+    "add-ownership-roles": {
+      "name": "add-ownership-roles",
+      "description": "Set the roles that are allowed to claim ownership of a channel.",
+      "role1": {
+        "name": "role1",
+        "description": "role1"
+      },
+      "role2": {
+        "name": "role2",
+        "description": "role2"
+      },
+      "role3": {
+        "name": "role3",
+        "description": "role3"
+      },
+      "role4": {
+        "name": "role4",
+        "description": "role4"
+      },
+      "role5": {
+        "name": "role5",
+        "description": "role5"
+      }
+    }
+  },
+  "voice": {
+    "name": "voice",
+    "description": "Management commands for channel owners.",
+    "rename": {
+      "name": "rename",
+      "description": "Rename a voice channel you own.",
+      "new-name": {
+        "name": "name",
+        "description": "The new name of your channel, must be between 1 and 50 characters long."
+      }
+    },
+    "limit": {
+      "name": "limit",
+      "description": "Change the user limit of a voice channel you own.",
+      "limit": {
+        "name": "limit",
+        "description": "The max number of users that can join this channel, must be between 1 and 99, set to 0 for infinite."
+      }
+    },
+    "kick": {
+      "name": "kick",
+      "description": "Kick a user from a voice channel you own.",
+      "user": {
+        "name": "user",
+        "description": "The user to be kicked"
+      },
+      "reason": {
+        "name": "reason",
+        "description": "A short description of why this user needed to be kicked"
+      }
+    },
+    "block": {
+      "name": "block",
+      "description": "Block a user from accessing a voice channel you own.",
+      "user": {
+        "name": "user",
+        "description": "The user to be blocked"
+      },
+      "reason": {
+        "name": "reason",
+        "description": "A short description of why this user needed to be blocked"
+      }
+    },
+    "unblock": {
+      "name": "unblock",
+      "description": "Unblock a user from a voice channel you own.",
+      "user": {
+        "name": "user",
+        "description": "The user to be unblocked"
+      },
+      "reason": {
+        "name": "reason",
+        "description": "A short description of why this user is being unblocked"
+      }
+    },
+    "transfer": {
+      "name": "transfer",
+      "description": "Transfer ownership of a voice channel to another user.",
+      "user": {
+        "name": "user",
+        "description": "The user to transfer ownership to."
+      },
+      "confirm": {
+        "name": "confirm",
+        "description": "Type CONFIRM to verify you aren't doing this by accident."
+      }
+    }
+  }
+}
