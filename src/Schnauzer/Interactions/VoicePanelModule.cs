@@ -34,10 +34,17 @@ public class VoicePanelModule(
         }
 
         var config = await db.Guilds
-            .Include(x => x.DynamicChannels.Where(x => x.Id == channel.Id))
+            .Include(x => x.DynamicChannels.Where(x => x.Id == channel.Id || x.OwnerId == Context.User.Id))
             .SingleOrDefaultAsync(x => x.Id == Context.Guild.Id);
-        var dynchan = config.DynamicChannels.SingleOrDefault();
 
+        var ownerchan = config.DynamicChannels.SingleOrDefault(x => x.OwnerId == Context.User.Id);
+        if (ownerchan != null)
+        {
+            await RespondAsync("You can't claim a channel if you already own another one.", ephemeral: true);
+            return;
+        }
+
+        var dynchan = config.DynamicChannels.SingleOrDefault(x => x.Id == channel.Id);
         if (dynchan.OwnerId == Context.User.Id)
         {
             await RespondAsync("You can't claim a channel you already own.", ephemeral: true);
