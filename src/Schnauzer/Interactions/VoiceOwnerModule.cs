@@ -17,14 +17,14 @@ public class VoiceOwnerModule(
     public async Task RenameAsync(
         [MinLength(1), MaxLength(50)]
         [Summary(description: "The new name of your channel, must be between 1 and 50 characters long.")]
-        string name)
+        string newName)
     {
         if (Context.Channel is not IVoiceChannel channel)
             return;
 
-        await channel.ModifyAsync(x => x.Name = name,
+        await channel.ModifyAsync(x => x.Name = newName,
             new RequestOptions { AuditLogReason = $"Updated by @{Context.User.Username} ({Context.User.Id})" });
-        await RespondAsync($"{Context.User.Mention} updated the channel's name to `{name}`", allowedMentions: AllowedMentions.None);
+        await RespondAsync($"{Context.User.Mention} updated the channel's name to `{newName}`", allowedMentions: AllowedMentions.None);
     }
 
     [SlashCommand("limit", "Change the user limit of a voice channel you own.")]
