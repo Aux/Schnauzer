@@ -8,6 +8,7 @@ namespace Schnauzer.Interactions;
 
 [Group("config", "A collection of admin-only configuration commands")]
 [RequireUserPermission(GuildPermission.Administrator)]
+[DefaultMemberPermissions(GuildPermission.Administrator)]
 public class ConfigModule(
     SchnauzerDb db
     ): InteractionModuleBase<SocketInteractionContext>
