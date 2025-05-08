@@ -75,8 +75,10 @@ public class ConfigModule(
     public async Task AddOwnershipRolesAsync(IRole role1, IRole role2 = null, IRole role3 = null, IRole role4 = null, IRole role5 = null)
     {
         var config = await EnsureConfigCreatedAsync();
-        config.CanOwnRoleIds ??= new List<ulong>([role1.Id]);
+        config.CanOwnRoleIds ??= [];
 
+        if (role1 is not null)
+            config.CanOwnRoleIds.Add(role1.Id);
         if (role2 is not null)
             config.CanOwnRoleIds.Add(role2.Id);
         if (role3 is not null)
