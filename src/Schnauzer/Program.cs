@@ -19,6 +19,7 @@ using var host = Host.CreateDefaultBuilder(args)
     .AddDiscord()
     .ConfigureServices(services =>
     {
+        services.AddMemoryCache();
         services.AddDbContextPool<SchnauzerDb>((provider, options) =>
         {
             var config = provider.GetRequiredService<IConfiguration>();
@@ -32,9 +33,12 @@ using var host = Host.CreateDefaultBuilder(args)
         services.AddSingleton<LocalizationProvider>();
         services.AddSingleton<GracePeriodService>();
 
+        services.AddTransient<DynamicChannelManager>();
+        services.AddTransient<ConfigCache>();
+        services.AddTransient<ChannelCache>();
+
         services.AddHostedService<DiscordHost>();
         services.AddHostedService<InteractionsHost>();
-
         services.AddHostedService<GuildMembershipService>();
         services.AddHostedService<VoiceStateService>();
     })
