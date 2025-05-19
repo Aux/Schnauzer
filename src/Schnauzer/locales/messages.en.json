@@ -7,13 +7,9 @@
       "stopped": "Stopped",
       "log_delete_empty_channel": "Dynamic voice channel is empty",
       "log_create_new_channel": "Created dynamic channel for @{0} ({1})",
+      "log_other_server_channel": "User already owns a dynamic channel in another server {0}",
+      "log_no_owner_roles": "User does not have a role that permits channel ownership",
       "log_updated_channel": "Updated by @{C0} ({1})",
-      "log_joined_already": "Joined a guild that already has a config {0} ({1})",
-      "log_ban_leave": "Leaving banned guild {0} ({1})",
-      "log_config_create": "Config created for {0} ({1})",
-      "log_leave_none": "Left a guild that didn't have a config {0} ({1})",
-      "log_config_delete": "Config deleted for {0} ({1})",
-      "log_config_missed": "Added a config for a missed guild {0} ({1})",
       "log_voice_kick": "Kicked by @{0} ({1})\nReason: {2}",
       "log_voice_block": "Blocked by @{0} ({1})\nReason: {2}",
       "log_voice_unblock": "Unblocked by @{0} ({1})\nReason: {2}",
@@ -25,7 +21,7 @@
     },
     "graceperiod": {
       "claim_button_name": "Claim Ownership",
-      "claim_msg": "Looks like the channel owner, {0}, has abandoned the channel. Anyone can click this button to claim ownership."
+      "claim_msg": "Looks like the channel owner, {0}, has abandoned the channel. Anyone can now click this button to claim ownership."
     },
     "config": {
       "no_create_channel": "*none set*",
@@ -56,6 +52,7 @@
     "voicepanel": {
       "panel_title": "Voice Channel Controls",
       "owner_field": "Owner",
+      "locale_field": "Locale",
       "commands_field": "Commands",
       "rename_button_name": "Rename",
       "limit_button_name": "User Limit",
