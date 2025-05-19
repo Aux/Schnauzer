@@ -41,8 +41,7 @@ public class ConfigModule(
         var embed = new EmbedBuilder()
             .WithTitle("Dynamic Channels Config")
             .WithDescription($"Create Channel: {createOption}\n" +
-                             $"Roles that can own channels:\n" +
-                             $"{string.Join(" ", config.CanOwnRoleIds.Select(MentionUtils.MentionRole))}");
+                             $"Roles that can own channels:\n");
 
         await RespondAsync(embeds: [embed.Build()], ephemeral: true);
     }

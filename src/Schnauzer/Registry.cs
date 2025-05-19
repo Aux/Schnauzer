@@ -16,7 +16,7 @@ public static class Registry
             services.AddTransient<DiscordRestClient>();
             services.AddSingleton(_ => new DiscordSocketClient(new()
             {
-                GatewayIntents = GatewayIntents.Guilds | GatewayIntents.GuildVoiceStates,
+                GatewayIntents = GatewayIntents.Guilds | GatewayIntents.GuildVoiceStates | GatewayIntents.AutoModerationConfiguration,
                 LogLevel = LogSeverity.Verbose,
                 MessageCacheSize = 0,
                 AuditLogCacheSize = 0,
@@ -28,7 +28,7 @@ public static class Registry
                 return new InteractionService(discord, new()
                 {
                     LogLevel = LogSeverity.Verbose,
-                    //LocalizationManager = new JsonLocalizationManager("locales/_interactions", "interactions")
+                    //LocalizationManager = new JsonLocalizationManager("locales", "interactions")
                 });
             });
         });

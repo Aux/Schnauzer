@@ -9,9 +9,10 @@ public static class CultureHelper
     {
         try
         {
-            cultureOut = new CultureInfo(cultureCode, false);
+            cultureOut = CultureInfo.GetCultureInfo(cultureCode);
             return true;
-        } catch (CultureNotFoundException)
+        } 
+        catch (CultureNotFoundException)
         {
             cultureOut = null;
         }
