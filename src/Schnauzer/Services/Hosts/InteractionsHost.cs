@@ -19,16 +19,17 @@ public class InteractionsHost(
         interactions.Log += msg => LogHelper.OnLogAsync(logger, msg);
         discord.Ready += async () =>
         {
-            await discord.SetCustomStatusAsync("🎙️ Serving up dynamic voice channels 🎙️");
-            await interactions.RegisterCommandsGloballyAsync(true);
+            //await interactions.RegisterCommandsGloballyAsync(true);
+            await discord.SetCustomStatusAsync("🎙️ Serving up dynamic voice channels");
         };
+        discord.GuildAvailable += guild => interactions.RegisterCommandsToGuildAsync(guild.Id, true);
         discord.InteractionCreated += OnInteractionAsync;
 
         await interactions.AddModuleAsync<ConfigModule>(services);
 
         await interactions.AddModuleAsync<VoicePanelModule>(services);
         await interactions.AddModuleAsync<VoiceOwnerModule>(services);
-        //await interactions.AddModuleAsync<VoiceContextModule>(services);
+        await interactions.AddModuleAsync<VoiceContextModule>(services);
     }
 
     public Task StopAsync(CancellationToken cancellationToken)
@@ -46,8 +47,9 @@ public class InteractionsHost(
 
             if (!result.IsSuccess)
                 await interaction.RespondAsync(result.ToString(), ephemeral: true);
-        } catch
+        } catch (Exception ex)
         {
+            logger.LogError(ex, ex.Message);
             if (interaction.Type == InteractionType.ApplicationCommand)
             {
                 await interaction.GetOriginalResponseAsync()
