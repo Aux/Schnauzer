@@ -1,0 +1,180 @@
+﻿using Discord;
+using Discord.WebSocket;
+using Microsoft.Extensions.Logging;
+using Schnauzer.Data.Models;
+
+namespace Schnauzer.Services;
+
+/// <summary>
+///     Stateless dynamic channel manager
+/// </summary>
+public class DynamicChannelManager(
+    ILogger<DynamicChannelManager> logger,
+    DiscordSocketClient discord,
+    LocalizationProvider localizer,
+    GracePeriodService gracePeriod,
+    ChannelCache channels)
+{
+    /// <summary>
+    ///     Actions to be taken when a user joins a voice channel
+    /// </summary>
+    public async Task HandleChannelJoinAsync(Guild config, SocketGuildUser user, SocketVoiceState state)
+    {
+        // Don't do anything for non-create channel joins
+        if (state.VoiceChannel.Id != config.CreateChannelId)
+            return;
+
+        // Get the server's preferred language
+        var locale = localizer.GetLocale(config.PreferredLocale);
+
+        // Create channel joins should be managed by permissions, but
+        // just in case that doesn't happen check if the user has owner roles
+        if (config.CanOwnRoleIds is not null && config.CanOwnRoleIds.Count > 0)
+        {
+            var roles = user.Roles.Select(x => x.Id)
+                .Intersect(config.CanOwnRoleIds);
+
+            if (!roles.Any())
+                await user.ModifyAsync(x => x.ChannelId = null,
+                    new RequestOptions() { AuditLogReason = locale.Get("log_no_owner_roles") });
+        }
+
+        // Get the user's existing dynamic channel or create one
+        var channel = await channels.GetAsync(user.Id);
+        if (channel is null)
+        {
+            var create = user.Guild.GetVoiceChannel(config.CreateChannelId.Value);
+            var perms = new List<Overwrite>(create.Category.PermissionOverwrites)
+            {
+                new(user.Id, PermissionTarget.User, new OverwritePermissions(
+                    moveMembers: PermValue.Allow, muteMembers: PermValue.Allow, deafenMembers: PermValue.Allow,
+                    prioritySpeaker: PermValue.Allow, useVoiceActivation: PermValue.Allow))
+            };
+
+            // Create the channel in discord
+            var voice = await user.Guild.CreateVoiceChannelAsync($"{user.DisplayName}'s channel", p =>
+            {
+                p.CategoryId = create.CategoryId;
+                p.Position = create.Position + 1;
+                p.PermissionOverwrites = perms;
+                p.UserLimit = config.DefaultLobbySize ?? 4;
+            },
+            new RequestOptions { AuditLogReason = locale.Get("internal:log_create_new_channel", user.Username, user.Id) });
+
+            // Save the channel to the database
+            channel = new DynamicChannel
+            {
+                Id = voice.Id,
+                GuildId = user.Guild.Id,
+                CreatorId = user.Id,
+                OwnerId = user.Id
+            };
+
+            await channels.TryCreateAsync(channel);
+        }
+
+        // Can't move someone to a voice channel in another server, so disconnect them
+        if (channel.GuildId != state.VoiceChannel.Guild.Id)
+        {
+            await user.ModifyAsync(x => x.ChannelId = null, 
+                new RequestOptions() { AuditLogReason = locale.Get("internal:log_other_server_channel", channel.GuildId) });
+        }
+
+        // Move the user (owner) to the dynamic channel
+        await user.ModifyAsync(x =>  x.ChannelId = channel.Id);
+
+        // Create the owner panel message if it doesn't exist
+        if (channel.PanelMessageId == null)
+            await CreateOrModifyPanelAsync(channel, user, locale);
+    }
+
+    /// <summary>
+    ///     Actions to be taken when a user leaves a voice channel
+    /// </summary>
+    public async Task HandleChannelLeaveAsync(Guild config, SocketGuildUser user, SocketVoiceState state)
+    {
+        // Ignore if it's not a dynamic channel
+        if (!await channels.ExistsAsync(state.VoiceChannel.Id))
+            return;
+
+        // Get the server's preferred language
+        var locale = localizer.GetLocale(config.PreferredLocale);
+
+        // Get channel config
+        var channel = await channels.GetAsync(user.Id);
+
+        // Channel is empty
+        if (state.VoiceChannel.ConnectedUsers.Count == 0)
+        {
+            // Clear any orphan timers before deletion
+            gracePeriod.TryStopTimer(state.VoiceChannel, user);
+
+            await state.VoiceChannel.DeleteAsync(new()
+            {
+                AuditLogReason = locale.Get("internal:log_delete_empty_channel")
+            });
+
+            await channels.DeleteAsync(user.Id);
+            return;
+        }
+
+        // The dynamic channel is orphaned
+        if (channel.OwnerId == user.Id)
+        {
+            gracePeriod.TryStartTimer(state.VoiceChannel, user, locale);
+            return;
+        }
+    }
+
+    /// <summary>
+    ///     Create or modify a dynamic channel panel message
+    /// </summary>
+    public async Task CreateOrModifyPanelAsync(DynamicChannel channel, SocketGuildUser user, Locale locale)
+    {
+        // Get voice commands to mention
+        var commands = await user.Guild.GetApplicationCommandsAsync();
+        var voiceCmds = commands.SingleOrDefault(x => x.Name.StartsWith("voice"));
+        
+        // Create interaction buttons
+        var renameButton = new ButtonBuilder()
+            .WithCustomId("rename_button:" + channel.Id)
+            .WithStyle(ButtonStyle.Primary)
+            .WithEmote(new Emoji("✏️"))
+            .WithLabel(locale.Get("voicepanel:rename_button_name"));
+        var limitButton = new ButtonBuilder()
+            .WithCustomId("limit_button:" + channel.Id)
+            .WithStyle(ButtonStyle.Primary)
+            .WithEmote(new Emoji("💺"))
+            .WithLabel(locale.Get("voicepanel:limit_button_name"));
+        
+        // Create components panel
+        var builder = new ComponentBuilderV2()
+            .WithContainer(new ContainerBuilder()
+                .WithSection(new SectionBuilder()
+                    .WithAccessory(new ThumbnailBuilder(new UnfurledMediaItemProperties(user.GetGuildAvatarUrl() ?? user.GetAvatarUrl())))
+                    .WithTextDisplay($"## {locale.Get("voicepanel:panel_title")}\n" +
+                                     $"**{locale.Get("voicepanel:owner_field")}:** {user.Mention}\n" +
+                                     $"**{locale.Get("voicepanel:locale_field")}:** {locale.Culture.DisplayName}\n" +
+                                     $"### {locale.Get("voicepanel:commands_field")}\n" +
+                            $"{string.Join(" ", voiceCmds?.Options.Select(x => $"</{voiceCmds.Name} {x.Name}:{voiceCmds.Id}>")) ?? "*none*"}"))
+                .WithSeparator()
+                .WithActionRow(new ActionRowBuilder()
+                    .WithButton(renameButton)
+                    .WithButton(limitButton))
+            );
+        
+        // Send or modify panel message
+        var voice = (IVoiceChannel)await discord.GetChannelAsync(channel.Id);
+        if (channel.PanelMessageId == null)
+        {
+            var msg = await voice.SendMessageAsync(components: builder.Build(), allowedMentions: AllowedMentions.None);
+
+            channel.PanelMessageId = msg.Id;
+            await channels.ModifyAsync(channel);
+        } else
+        {
+            var msg = await voice.GetMessageAsync(channel.PanelMessageId.Value) as IUserMessage;
+            await msg.ModifyAsync(x => x.Components = builder.Build());
+        }
+    }
+}
