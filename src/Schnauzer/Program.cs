@@ -33,7 +33,7 @@ using var host = Host.CreateDefaultBuilder(args)
         services.AddSingleton<LocalizationProvider>();
         services.AddSingleton<GracePeriodService>();
 
-        services.AddTransient<DynamicChannelManager>();
+        services.AddTransient<ChannelManager>();
         services.AddTransient<ConfigCache>();
         services.AddTransient<ChannelCache>();
 
@@ -41,6 +41,7 @@ using var host = Host.CreateDefaultBuilder(args)
         services.AddHostedService<InteractionsHost>();
         services.AddHostedService<GuildMembershipService>();
         services.AddHostedService<VoiceStateService>();
+        services.AddHostedService<CleanupService>();
     })
     .Build();
 
