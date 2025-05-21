@@ -1,6 +1,5 @@
 ﻿using Discord;
 using Discord.Interactions;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Schnauzer.Data;
 
@@ -21,7 +20,7 @@ public class RequireChannelOwnerAttribute : PreconditionAttribute
 
         // Check if the user is the channel owner
         var db = services.GetRequiredService<SchnauzerDb>();
-        var allowed = await db.Channels.AnyAsync(x => x.Id == context.Channel.Id && x.OwnerId == context.User.Id);
+        var allowed = await SchnauzerDb.IsChannelOwnerAsync(db, context.Channel.Id, context.User.Id);
 
         if (allowed)
             return PreconditionResult.FromSuccess();
