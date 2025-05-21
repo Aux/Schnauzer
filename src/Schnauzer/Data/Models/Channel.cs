@@ -1,6 +1,6 @@
 ﻿namespace Schnauzer.Data.Models;
 
-public class DynamicChannel
+public class Channel
 {
     public required ulong Id { get; set; }
     public required ulong GuildId { get; set; }

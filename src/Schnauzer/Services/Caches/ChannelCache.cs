@@ -24,9 +24,9 @@ public class ChannelCache(
     /// <summary>
     ///     Get the dynamic channel settings for a voice channel
     /// </summary>
-    public async Task<DynamicChannel> GetAsync(ulong userId)
+    public async Task<Channel> GetAsync(ulong userId)
     {
-        if (cache.TryGetValue<DynamicChannel>($"channel:{userId}", out var channel))
+        if (cache.TryGetValue<Channel>($"channel:{userId}", out var channel))
         {
             logger.LogDebug("Returned `channel:{Id}` from cache", userId);
             return channel;
@@ -47,7 +47,7 @@ public class ChannelCache(
     /// <summary>
     ///     
     /// </summary>
-    public async Task<bool> TryCreateAsync(DynamicChannel channel)
+    public async Task<bool> TryCreateAsync(Channel channel)
     {
         var existing = await GetAsync(channel.OwnerId);
         if (existing is not null)
@@ -67,7 +67,7 @@ public class ChannelCache(
     /// <summary>
     ///     
     /// </summary>
-    public async Task ModifyAsync(DynamicChannel channel)
+    public async Task ModifyAsync(Channel channel)
     {
         db.Update(channel);
         await db.SaveChangesAsync();
@@ -81,7 +81,7 @@ public class ChannelCache(
     /// </summary>
     public async Task DeleteAsync(ulong userId)
     {
-        if (!cache.TryGetValue<DynamicChannel>($"channel:{userId}", out var channel))
+        if (!cache.TryGetValue<Channel>($"channel:{userId}", out var channel))
         {
             logger.LogDebug("Did not delete `channel:{Id}` from cache and db, does not exist.", userId);
             return;

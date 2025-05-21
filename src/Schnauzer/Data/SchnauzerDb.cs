@@ -8,7 +8,7 @@ public class SchnauzerDb(
     ) : DbContext(options)
 {
     public DbSet<Guild> Guilds { get; set; }
-    public DbSet<DynamicChannel> Channels { get; set; }
+    public DbSet<Channel> Channels { get; set; }
 
     protected override void OnModelCreating(ModelBuilder builder)
     {
@@ -27,20 +27,15 @@ public class SchnauzerDb(
         EF.CompileAsyncQuery((SchnauzerDb db, ulong guildId) =>
             db.Guilds.SingleOrDefault(x => x.Id == guildId));
 
-    public static readonly Func<SchnauzerDb, ulong, Task<Guild>> GetConfigWithChannelsAsync =
-        EF.CompileAsyncQuery((SchnauzerDb db, ulong guildId) =>
-            db.Guilds.Include(x => x.DynamicChannels)
-            .SingleOrDefault(x => x.Id == guildId));
-
     public static readonly Func<SchnauzerDb, ulong, Task<bool>> ChannelExistsAsync =
         EF.CompileAsyncQuery((SchnauzerDb db, ulong channelId) =>
             db.Channels.Any(x => x.Id == channelId));
 
-    public static readonly Func<SchnauzerDb, ulong, Task<DynamicChannel>> GetChannelAsync =
+    public static readonly Func<SchnauzerDb, ulong, Task<Channel>> GetChannelAsync =
         EF.CompileAsyncQuery((SchnauzerDb db, ulong channelId) =>
             db.Channels.SingleOrDefault(x => x.Id == channelId));
 
-    public static readonly Func<SchnauzerDb, ulong, Task<DynamicChannel>> GetChannelByOwnerAsync =
+    public static readonly Func<SchnauzerDb, ulong, Task<Channel>> GetChannelByOwnerAsync =
         EF.CompileAsyncQuery((SchnauzerDb db, ulong userId) =>
             db.Channels.SingleOrDefault(x => x.OwnerId == userId));
 
