@@ -13,7 +13,9 @@
       "log_voice_kick": "Kicked by @{0} ({1})\nReason: {2}",
       "log_voice_block": "Blocked by @{0} ({1})\nReason: {2}",
       "log_voice_unblock": "Unblocked by @{0} ({1})\nReason: {2}",
-      "log_voice_transfer": "Transferring ownership to @{0} ({1})"
+      "log_voice_transfer": "Transferring ownership to @{0} ({1})",
+      "log_blocked_channel_create": "Tried to create a channel with a term blocked by the rule {0}: `{1}`",
+      "log_blocked_channel_rename": "{0} tried to rename a channel with a term blocked by the rule {1}: `{2}`"
     },
     "errors": {
       "impossible": "It shouldn't be possible for this to happen, but you know...",

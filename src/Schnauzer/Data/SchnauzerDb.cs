@@ -27,6 +27,7 @@ public class SchnauzerDb(
         EF.CompileAsyncQuery((SchnauzerDb db, ulong guildId) =>
             db.Guilds.SingleOrDefault(x => x.Id == guildId));
 
+
     public static readonly Func<SchnauzerDb, ulong, Task<bool>> ChannelExistsAsync =
         EF.CompileAsyncQuery((SchnauzerDb db, ulong channelId) =>
             db.Channels.Any(x => x.Id == channelId));
@@ -39,4 +40,7 @@ public class SchnauzerDb(
         EF.CompileAsyncQuery((SchnauzerDb db, ulong userId) =>
             db.Channels.SingleOrDefault(x => x.OwnerId == userId));
 
+    public static readonly Func<SchnauzerDb, ulong, ulong, Task<bool>> IsChannelOwnerAsync =
+        EF.CompileAsyncQuery((SchnauzerDb db, ulong channelId, ulong userId) =>
+            db.Channels.Any(x => x.Id == channelId && x.OwnerId == userId));
 }

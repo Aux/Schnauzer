@@ -2,6 +2,7 @@
 using Discord.WebSocket;
 using Microsoft.Extensions.Logging;
 using Schnauzer.Data.Models;
+using Schnauzer.Utility;
 
 namespace Schnauzer.Services;
 
@@ -24,6 +25,9 @@ public class ChannelManager(
         if (state.VoiceChannel.Id != config.CreateChannelId)
             return;
 
+        logger.LogInformation("User {UserId} joined create channel {ChannelId} in {GuildId}", 
+            user.Id, state.VoiceChannel.Id, user.Guild.Id);
+
         // Get the server's preferred language
         var locale = localizer.GetLocale(config.PreferredLocale);
 
@@ -43,6 +47,17 @@ public class ChannelManager(
         var channel = await channels.GetAsync(user.Id);
         if (channel is null)
         {
+            // Check if the user's name contains automod blocked terms
+            if (config.IsAutoModEnabled ?? false && config.AutomodRuleIds?.Count != 0)
+            {
+                var result = AutoModHelper.IsBlocked(user.DisplayName, user, config);
+                if (result.IsBlocked)
+                {
+                    await user.KickAsync(locale.Get("log_blocked_channel_create", result.Rule.Name, result.Keyword));
+                    return;
+                }
+            }
+
             var create = user.Guild.GetVoiceChannel(config.CreateChannelId.Value);
             var perms = new List<Overwrite>(create.Category.PermissionOverwrites)
             {
@@ -96,6 +111,9 @@ public class ChannelManager(
         // Ignore if it's not a dynamic channel
         if (!await channels.ExistsAsync(state.VoiceChannel.Id))
             return;
+
+        logger.LogInformation("User {UserId} left dynamic channel {ChannelId} in {GuildId}",
+            user.Id, state.VoiceChannel.Id, user.Guild.Id);
 
         // Get the server's preferred language
         var locale = localizer.GetLocale(config.PreferredLocale);

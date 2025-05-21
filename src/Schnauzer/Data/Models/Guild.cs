@@ -7,10 +7,13 @@ public class Guild
     public ulong? CreateChannelId { get; set; }
     public string PreferredLocale { get; set; }
 
-    public List<ulong> ExcludeAutomodRuleIds { get; set; }
     public List<ulong> CanOwnRoleIds { get; set; }
     public int? DefaultLobbySize { get; set; }
     public int? MaxLobbySize { get; set; }
+
+    public bool? IsAutoModEnabled { get; set; }
+    public ulong? AutoModLogChannelId { get; set; }
+    public List<ulong> AutomodRuleIds { get; set; }
 
     public List<Channel> DynamicChannels { get; set; }
 }
