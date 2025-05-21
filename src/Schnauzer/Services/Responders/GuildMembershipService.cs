@@ -65,10 +65,13 @@ public class GuildMembershipService(
             logger.LogInformation("Left a guild that didn't have a config {GuildName} ({GuildId})", guild.Name, guild.Id);
             return;
         }
+
+        // Need to delete guild config and dynamic channels from database
     }
 
     private async Task OnGuildAvailableAsync(SocketGuild guild)
     {
+        await guild.GetAutoModRulesAsync();
         if (!await configs.ExistsAsync(guild.Id))
         {
             await configs.TryCreateAsync(new()

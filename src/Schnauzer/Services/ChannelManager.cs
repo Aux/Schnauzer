@@ -6,10 +6,10 @@ using Schnauzer.Data.Models;
 namespace Schnauzer.Services;
 
 /// <summary>
-///     Stateless dynamic channel manager
+///     Dynamic channel manager
 /// </summary>
-public class DynamicChannelManager(
-    ILogger<DynamicChannelManager> logger,
+public class ChannelManager(
+    ILogger<ChannelManager> logger,
     DiscordSocketClient discord,
     LocalizationProvider localizer,
     GracePeriodService gracePeriod,
@@ -62,7 +62,7 @@ public class DynamicChannelManager(
             new RequestOptions { AuditLogReason = locale.Get("internal:log_create_new_channel", user.Username, user.Id) });
 
             // Save the channel to the database
-            channel = new DynamicChannel
+            channel = new Channel
             {
                 Id = voice.Id,
                 GuildId = user.Guild.Id,
@@ -129,7 +129,7 @@ public class DynamicChannelManager(
     /// <summary>
     ///     Create or modify a dynamic channel panel message
     /// </summary>
-    public async Task CreateOrModifyPanelAsync(DynamicChannel channel, SocketGuildUser user, Locale locale)
+    public async Task CreateOrModifyPanelAsync(Channel channel, SocketGuildUser user, Locale locale)
     {
         // Get voice commands to mention
         var commands = await user.Guild.GetApplicationCommandsAsync();

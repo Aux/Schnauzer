@@ -7,7 +7,7 @@ namespace Schnauzer.Services;
 public class VoiceStateService(
     ILogger<VoiceStateService> logger,
     DiscordSocketClient discord,
-    DynamicChannelManager manager,
+    ChannelManager manager,
     ConfigCache configs
     ) : IHostedService
 {
