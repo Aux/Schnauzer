@@ -11,17 +11,20 @@ namespace Schnauzer.Services;
 /// </summary>
 public class CleanupService(
     ILogger<CleanupService> logger,
+    LocalizationProvider localizer,
     DiscordSocketClient discord,
     ChannelCache cache,
     SchnauzerDb db
     ) : IHostedService
 {
+    private readonly TimeSpan _cleanupRate = TimeSpan.FromSeconds(300);
+
     private Timer _timer;
     private uint _iterations = 0;
 
     public Task StartAsync(CancellationToken cancellationToken)
     {
-        _timer = new(OnTimerTick, default, TimeSpan.FromMinutes(1), TimeSpan.FromMinutes(1));
+        _timer = new(OnTimerTick, default, _cleanupRate, _cleanupRate);
 
         logger.LogInformation("Started");
         return Task.CompletedTask;
@@ -53,8 +56,9 @@ public class CleanupService(
             var voice = guild.GetVoiceChannel(channel.Id);
             if (voice is null || voice.ConnectedUsers.Count == 0)
             {
+                var locale = localizer.GetLocale(guild.PreferredLocale);
                 cache.DeleteAsync(channel.OwnerId).GetAwaiter().GetResult();
-                voice?.DeleteAsync(new() { AuditLogReason = "Cleaning up a forgotten dynamic channel"}).GetAwaiter().GetResult();
+                voice?.DeleteAsync(new() { AuditLogReason = locale.Get("log:forgotten_channel") }).GetAwaiter().GetResult();
 
                 logger.LogInformation("Cleaned up a forgotten channel {ChannelId} in {GuildId}, check #{Iter}", channel.Id, guild.Id, _iterations);
             }

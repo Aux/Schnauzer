@@ -40,7 +40,7 @@ public class ChannelManager(
 
             if (!roles.Any())
                 await user.ModifyAsync(x => x.ChannelId = null,
-                    new RequestOptions() { AuditLogReason = locale.Get("log_no_owner_roles") });
+                    new RequestOptions() { AuditLogReason = locale.Get("log:no_owner_roles") });
         }
 
         // Get the user's existing dynamic channel or create one
@@ -53,7 +53,7 @@ public class ChannelManager(
                 var result = AutoModHelper.IsBlocked(user.DisplayName, user, config);
                 if (result.IsBlocked)
                 {
-                    await user.KickAsync(locale.Get("log_blocked_channel_create", result.Rule.Name, result.Keyword));
+                    await user.KickAsync(locale.Get("log:blocked_channel_create", result.Rule.Name, result.Keyword));
                     return;
                 }
             }
@@ -74,7 +74,7 @@ public class ChannelManager(
                 p.PermissionOverwrites = perms;
                 p.UserLimit = config.DefaultLobbySize ?? 4;
             },
-            new RequestOptions { AuditLogReason = locale.Get("internal:log_create_new_channel", user.Username, user.Id) });
+            new RequestOptions { AuditLogReason = locale.Get("log:create_new_channel", user.Username, user.Id) });
 
             // Save the channel to the database
             channel = new Channel
@@ -92,7 +92,7 @@ public class ChannelManager(
         if (channel.GuildId != state.VoiceChannel.Guild.Id)
         {
             await user.ModifyAsync(x => x.ChannelId = null, 
-                new RequestOptions() { AuditLogReason = locale.Get("internal:log_other_server_channel", channel.GuildId) });
+                new RequestOptions() { AuditLogReason = locale.Get("log:other_server_channel", channel.GuildId) });
         }
 
         // Move the user (owner) to the dynamic channel
@@ -129,7 +129,7 @@ public class ChannelManager(
 
             await state.VoiceChannel.DeleteAsync(new()
             {
-                AuditLogReason = locale.Get("internal:log_delete_empty_channel")
+                AuditLogReason = locale.Get("log:delete_empty_channel")
             });
 
             await channels.DeleteAsync(user.Id);
