@@ -3,6 +3,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using Octokit;
 using Schnauzer;
 using Schnauzer.Data;
 using Schnauzer.Services;
@@ -23,6 +24,7 @@ using var host = Host.CreateDefaultBuilder(args)
         services.AddDbContextPool<SchnauzerDb>((provider, options) =>
         {
             var config = provider.GetRequiredService<IConfiguration>();
+            options.EnableSensitiveDataLogging(true);
             options.UseNpgsql($"" +
                 $"Host={config["PGHOST"]};" +
                 $"Username={config["PGUSER"]};" +
@@ -30,6 +32,7 @@ using var host = Host.CreateDefaultBuilder(args)
                 $"Database={config["PGDATABASE"]};");
         });
 
+        services.AddSingleton(new GitHubClient(new ProductHeaderValue("Schnauzer")));
         services.AddSingleton<LocalizationProvider>();
         services.AddSingleton<GracePeriodService>();
 
