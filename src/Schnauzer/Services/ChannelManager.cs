@@ -25,11 +25,27 @@ public class ChannelManager(
         if (state.VoiceChannel.Id != config.CreateChannelId)
             return;
 
-        logger.LogInformation("User {UserId} joined create channel {ChannelId} in {GuildId}", 
-            user.Id, state.VoiceChannel.Id, user.Guild.Id);
-
         // Get the server's preferred language
         var locale = localizer.GetLocale(config.PreferredLocale);
+
+        // Don't allow deafened users to own a channel
+        if ((config.DenyDeafenedOwnership ?? true) && state.IsDeafened)
+        {
+            await user.ModifyAsync(x => x.ChannelId = null,
+                new RequestOptions() { AuditLogReason = locale.Get("log:deny_deafened_ownership") });
+            return;
+        }
+
+        // Don't allow muted users to own a channel
+        if ((config.DenyMutedOwnership ?? true) && state.IsMuted)
+        {
+            await user.ModifyAsync(x => x.ChannelId = null,
+                new RequestOptions() { AuditLogReason = locale.Get("log:deny_muted_ownership") });
+            return;
+        }
+
+        logger.LogInformation("User {UserId} joined create channel {ChannelId} in {GuildId}", 
+            user.Id, state.VoiceChannel.Id, user.Guild.Id);
 
         // Create channel joins should be managed by permissions, but
         // just in case that doesn't happen check if the user has owner roles
