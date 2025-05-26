@@ -18,10 +18,6 @@ public class SchnauzerDb(
             .WithOne(x => x.Guild)
             .HasForeignKey(x => x.GuildId)
             .HasPrincipalKey(x => x.Id);
-
-        builder.Entity<User>()
-            .HasOne(x => x.DynamicChannel)
-            .WithOne(x => x.Owner);
     }
 
     public static readonly Func<SchnauzerDb, ulong, Task<bool>> ConfigExistsAsync =

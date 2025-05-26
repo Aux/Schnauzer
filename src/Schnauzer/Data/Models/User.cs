@@ -5,6 +5,4 @@ public class User
     public bool? IsBanned { get; set; }
 
     public string PreferredLocale { get; set; }
-
-    public Channel DynamicChannel { get; set; }
 }

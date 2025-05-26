@@ -10,5 +10,4 @@ public class Channel
     public string PreferredLocale { get; set; }
 
     public Guild Guild { get; set; }
-    public User Owner { get; set; }
 }

@@ -4,7 +4,6 @@ namespace Schnauzer.Data.Models;
 
 public class Guild
 {
-    [JsonIgnore]
     public required ulong Id { get; set; }
     [JsonIgnore]
     public bool? IsBanned { get; set; }
