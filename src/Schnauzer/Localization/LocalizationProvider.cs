@@ -12,6 +12,8 @@ public class LocalizationProvider
 
     private List<Locale> _locales = [];
 
+    public IReadOnlyCollection<Locale> Locales => _locales.AsReadOnly();
+
     public LocalizationProvider(ILogger<LocalizationProvider> logger)
     {
         _logger = logger;
