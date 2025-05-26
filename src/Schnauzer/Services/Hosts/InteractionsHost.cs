@@ -3,6 +3,7 @@ using Discord.Interactions;
 using Discord.WebSocket;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using Schnauzer.Discord.Interactions;
 using Schnauzer.Interactions;
 
 namespace Schnauzer.Services;
@@ -25,11 +26,11 @@ public class InteractionsHost(
         discord.GuildAvailable += guild => interactions.RegisterCommandsToGuildAsync(guild.Id, true);
         discord.InteractionCreated += OnInteractionAsync;
 
-        await interactions.AddModuleAsync<ConfigModule>(services);
+        await interactions.AddModuleAsync<AboutModule>(services);
 
-        await interactions.AddModuleAsync<VoicePanelModule>(services);
-        await interactions.AddModuleAsync<VoiceOwnerModule>(services);
-        await interactions.AddModuleAsync<VoiceContextModule>(services);
+        //await interactions.AddModuleAsync<ConfigAutomodModule>(services);
+        await interactions.AddModuleAsync<ConfigModule>(services);
+        await interactions.AddModuleAsync<VoiceModule>(services);
     }
 
     public Task StopAsync(CancellationToken cancellationToken)
