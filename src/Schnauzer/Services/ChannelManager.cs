@@ -27,7 +27,7 @@ public class ChannelManager(
 
         // Get the server's preferred language
         var locale = localizer.GetLocale(config.PreferredLocale);
-
+        
         // Don't allow deafened users to own a channel
         if ((config.DenyDeafenedOwnership ?? true) && state.IsDeafened)
         {
@@ -180,7 +180,12 @@ public class ChannelManager(
             .WithStyle(ButtonStyle.Primary)
             .WithEmote(new Emoji("💺"))
             .WithLabel(locale.Get("voicepanel:limit_button_name"));
-        
+        var localeButton = new ButtonBuilder()
+            .WithCustomId("locale_button:" + channel.Id)
+            .WithStyle(ButtonStyle.Primary)
+            .WithEmote(new Emoji("🌎"))
+            .WithLabel(locale.Get("voicepanel:locale_button_name"));
+
         // Create components panel
         var builder = new ComponentBuilderV2()
             .WithContainer(new ContainerBuilder()
@@ -194,7 +199,8 @@ public class ChannelManager(
                 .WithSeparator()
                 .WithActionRow(new ActionRowBuilder()
                     .WithButton(renameButton)
-                    .WithButton(limitButton))
+                    .WithButton(limitButton)
+                    .WithButton(localeButton))
             );
         
         // Send or modify panel message
