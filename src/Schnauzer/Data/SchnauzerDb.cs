@@ -9,6 +9,7 @@ public class SchnauzerDb(
 {
     public DbSet<Guild> Guilds { get; set; }
     public DbSet<Channel> Channels { get; set; }
+    public DbSet<User> Users { get; set; }
 
     protected override void OnModelCreating(ModelBuilder builder)
     {
@@ -17,6 +18,10 @@ public class SchnauzerDb(
             .WithOne(x => x.Guild)
             .HasForeignKey(x => x.GuildId)
             .HasPrincipalKey(x => x.Id);
+
+        builder.Entity<User>()
+            .HasOne(x => x.DynamicChannel)
+            .WithOne(x => x.Owner);
     }
 
     public static readonly Func<SchnauzerDb, ulong, Task<bool>> ConfigExistsAsync =
