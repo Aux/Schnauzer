@@ -4,20 +4,18 @@ using Schnauzer.Services;
 
 namespace Schnauzer.Discord.Interactions;
 
-[Group("config", "A collection of admin-only configuration commands")]
 [RequireUserPermission(GuildPermission.Administrator)]
 [DefaultMemberPermissions(GuildPermission.Administrator)]
-public class ConfigLobbyModule : InteractionModuleBase<SocketInteractionContext>
+[Group("config", "A collection of admin-only configuration commands")]
+public partial class ConfigModule(
+    LocalizationProvider localizer, 
+    ConfigCache configs, 
+    ChannelCache cache) : InteractionModuleBase<SocketInteractionContext>
 {
-    private readonly ConfigCache _config;
-    private readonly ChannelCache _cache;
-    private readonly Locale _locale;
+    private Locale _locale;
 
-    public ConfigLobbyModule(LocalizationProvider localizer, ConfigCache config, ChannelCache cache)
+    public override void BeforeExecute(ICommandInfo command)
     {
-        _config = config;
-        _cache = cache;
-
         _locale = localizer.GetLocale(Context.Interaction.UserLocale);
     }
 
@@ -27,15 +25,15 @@ public class ConfigLobbyModule : InteractionModuleBase<SocketInteractionContext>
         IVoiceChannel channel)
     {
         // Can't set a dynamic channel as create
-        if (await _cache.ExistsAsync(channel.Id))
+        if (await cache.ExistsAsync(channel.Id))
         {
             await RespondAsync(_locale.Get("config:set_dynamic_error"), ephemeral: true);
             return;
         }
 
-        var config = await _config.GetAsync(Context.Guild.Id);
+        var config = await configs.GetAsync(Context.Guild.Id);
         config.CreateChannelId = channel.Id;
-        await _config.ModifyAsync(config);
+        await configs.ModifyAsync(config);
 
         await RespondAsync(_locale.Get("config:set_dynamic_success", channel.Mention), ephemeral: true);
     }
@@ -46,9 +44,9 @@ public class ConfigLobbyModule : InteractionModuleBase<SocketInteractionContext>
         [Summary(description : "The default number of users allowed to join a channel, set to 0 for unlimited.")]
         int size = 4)
     {
-        var config = await _config.GetAsync(Context.Guild.Id);
+        var config = await configs.GetAsync(Context.Guild.Id);
         config.DefaultLobbySize = size > 0 ? size : null;
-        await _config.ModifyAsync(config);
+        await configs.ModifyAsync(config);
 
         await RespondAsync(_locale.Get("config:set_default_lobby_size_success", 
             config.DefaultLobbySize?.ToString() ?? "∞"), ephemeral: true);
@@ -60,9 +58,9 @@ public class ConfigLobbyModule : InteractionModuleBase<SocketInteractionContext>
         [Summary(description: "The max number of users allowed to join a channel, set to 0 for unlimited.")]
         int size = 0)
     {
-        var config = await _config.GetAsync(Context.Guild.Id);
+        var config = await configs.GetAsync(Context.Guild.Id);
         config.MaxLobbySize = size > 0 ? size : null;
-        await _config.ModifyAsync(config);
+        await configs.ModifyAsync(config);
 
         await RespondAsync(_locale.Get("config:set_max_lobby_size_success", 
             config.MaxLobbySize?.ToString() ?? "∞"), ephemeral: true);
@@ -74,9 +72,9 @@ public class ConfigLobbyModule : InteractionModuleBase<SocketInteractionContext>
         [Summary(description: "The max number of dynamic channels, set to 0 for unlimited.")]
         int count = 0)
     {
-        var config = await _config.GetAsync(Context.Guild.Id);
+        var config = await configs.GetAsync(Context.Guild.Id);
         config.MaxLobbyCount = count > 0 ? count : null;
-        await _config.ModifyAsync(config);
+        await configs.ModifyAsync(config);
 
         await RespondAsync(_locale.Get("config:set_max_lobby_count_success", 
             config.MaxLobbyCount?.ToString() ?? "∞"), ephemeral: true);
@@ -88,9 +86,9 @@ public class ConfigLobbyModule : InteractionModuleBase<SocketInteractionContext>
         [Summary(description: "Either enable or disable AutoMod checks")]
         int toggle)
     {
-        var config = await _config.GetAsync(Context.Guild.Id);
+        var config = await configs.GetAsync(Context.Guild.Id);
         config.IsAutoModEnabled = toggle == 1;
-        await _config.ModifyAsync(config);
+        await configs.ModifyAsync(config);
 
         if (config.IsAutoModEnabled ?? true)
             await RespondAsync(_locale.Get("config:toggle_deny_deafened_ownership"), ephemeral: true);
@@ -104,9 +102,9 @@ public class ConfigLobbyModule : InteractionModuleBase<SocketInteractionContext>
         [Summary(description: "Either allow or deny server muted ownership")]
         int toggle)
     {
-        var config = await _config.GetAsync(Context.Guild.Id);
+        var config = await configs.GetAsync(Context.Guild.Id);
         config.DenyMutedOwnership = toggle == 1;
-        await _config.ModifyAsync(config);
+        await configs.ModifyAsync(config);
 
         if (config.IsAutoModEnabled ?? true)
             await RespondAsync(_locale.Get("config:toggle_deny_muted_ownership"), ephemeral: true);
@@ -119,14 +117,14 @@ public class ConfigLobbyModule : InteractionModuleBase<SocketInteractionContext>
         [Summary(description: "The default number of users allowed to join a channel, set to 0 for unlimited.")]
         IRole role)
     {
-        var config = await _config.GetAsync(Context.Guild.Id);
+        var config = await configs.GetAsync(Context.Guild.Id);
 
         if (config.CanOwnRoleIds is null)
             config.CanOwnRoleIds = [role.Id];
         else
             config.CanOwnRoleIds.Add(role.Id);
 
-        await _config.ModifyAsync(config);
+        await configs.ModifyAsync(config);
 
         await RespondAsync(_locale.Get("config:add_ownership_roles_success", role.Mention, 
             string.Join(" ", config.CanOwnRoleIds.Select(MentionUtils.MentionRole))), 
@@ -136,7 +134,7 @@ public class ConfigLobbyModule : InteractionModuleBase<SocketInteractionContext>
     [SlashCommand("remove-ownership-role", "Remove a role for users that are allowed to own a dynamic channel")]
     public async Task RemoveOwnershipRoleAsync(IRole role)
     {
-        var config = await _config.GetAsync(Context.Guild.Id);
+        var config = await configs.GetAsync(Context.Guild.Id);
 
         if (config.CanOwnRoleIds is null || !config.CanOwnRoleIds.Remove(role.Id))
         {
@@ -145,7 +143,7 @@ public class ConfigLobbyModule : InteractionModuleBase<SocketInteractionContext>
             return;
         } 
 
-        await _config.ModifyAsync(config);
+        await configs.ModifyAsync(config);
 
         await RespondAsync(_locale.Get("config:remove_ownership_roles_success", role.Mention,
             string.Join(" ", config.CanOwnRoleIds.Select(MentionUtils.MentionRole))),

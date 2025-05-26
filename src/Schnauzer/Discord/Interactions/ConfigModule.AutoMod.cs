@@ -1,32 +1,19 @@
 ﻿using Discord;
 using Discord.Interactions;
-using Schnauzer.Services;
 
 namespace Schnauzer.Discord.Interactions;
 
-[Group("config", "A collection of admin-only configuration commands")]
-[RequireUserPermission(GuildPermission.Administrator)]
-[DefaultMemberPermissions(GuildPermission.Administrator)]
-public class ConfigAutomodModule : InteractionModuleBase<SocketInteractionContext>
+public partial class ConfigModule : InteractionModuleBase<SocketInteractionContext>
 {
-    private readonly ConfigCache _config;
-    private readonly Locale _locale;
-
-    public ConfigAutomodModule(LocalizationProvider localizer, ConfigCache config)
-    {
-        _config = config;
-        _locale = localizer.GetLocale(Context.Interaction.UserLocale);
-    }
-
     [SlashCommand("automod-toggle", "Enable or disable AutoMod checks in channel names")]
     public async Task ToggleAsync(
         [Choice("Enable", 1), Choice("Disable", 0)]
         [Summary(description: "Either enable or disable AutoMod checks")]
         int toggle)
     {
-        var config = await _config.GetAsync(Context.Guild.Id);
+        var config = await configs.GetAsync(Context.Guild.Id);
         config.IsAutoModEnabled = toggle == 1;
-        await _config.ModifyAsync(config);
+        await configs.ModifyAsync(config);
 
         if (config.IsAutoModEnabled ?? true)
             await RespondAsync(_locale.Get("config:toggle_automod_enabled"), ephemeral: true);
@@ -39,9 +26,9 @@ public class ConfigAutomodModule : InteractionModuleBase<SocketInteractionContex
         [Summary(description: "The channel to send messages to, omit to disable")]
         ITextChannel channel = null)
     {
-        var config = await _config.GetAsync(Context.Guild.Id);
+        var config = await configs.GetAsync(Context.Guild.Id);
         config.AutoModLogChannelId = channel?.Id;
-        await _config.ModifyAsync(config);
+        await configs.ModifyAsync(config);
 
         if (channel is null)
             await RespondAsync(_locale.Get("config:set_automod_logto_disabled"), ephemeral: true);
@@ -60,7 +47,7 @@ public class ConfigAutomodModule : InteractionModuleBase<SocketInteractionContex
         }
 
         // The rule is already configured
-        var config = await _config.GetAsync(Context.Guild.Id);
+        var config = await configs.GetAsync(Context.Guild.Id);
         if (config.AutomodRuleIds?.Contains(rule.Id) ?? false)
         {
             await RespondAsync(_locale.Get("config:add_automod_rule_duplicate_error", rule.Name), ephemeral: true);
@@ -72,7 +59,7 @@ public class ConfigAutomodModule : InteractionModuleBase<SocketInteractionContex
         else
             config.AutomodRuleIds = [rule.Id];
 
-        await _config.ModifyAsync(config);
+        await configs.ModifyAsync(config);
 
         await RespondAsync(_locale.Get("config:add_automod_rule_success", rule.Name), ephemeral: true);
     }
@@ -80,7 +67,7 @@ public class ConfigAutomodModule : InteractionModuleBase<SocketInteractionContex
     [SlashCommand("automod-remove", "Remove AutoMod rule")]
     public async Task RemoveRuleAsync(IAutoModRule rule)
     {
-        var config = await _config.GetAsync(Context.Guild.Id);
+        var config = await configs.GetAsync(Context.Guild.Id);
 
         // The rule isn't configured
         if (config.AutomodRuleIds is null || !config.AutomodRuleIds.Contains(rule.Id))
@@ -89,7 +76,7 @@ public class ConfigAutomodModule : InteractionModuleBase<SocketInteractionContex
             return;
         }
 
-        await _config.ModifyAsync(config);
+        await configs.ModifyAsync(config);
 
         await RespondAsync(_locale.Get("config:remove_automod_rule_success", rule.Name), ephemeral: true);
     }

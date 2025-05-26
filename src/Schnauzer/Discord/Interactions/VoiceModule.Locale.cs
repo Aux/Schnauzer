@@ -1,0 +1,97 @@
+﻿using Discord;
+using Discord.Interactions;
+using Discord.WebSocket;
+using Schnauzer.Services;
+
+namespace Schnauzer.Discord.Interactions;
+
+[RequireChannelOwner]
+[RequireContext(ContextType.Guild)]
+[Group("voice", "Management commands for channel owners.")]
+public partial class VoiceModule(
+    LocalizationProvider localizer, 
+    ConfigCache configs, 
+    ChannelCache channels) 
+    : InteractionModuleBase<SocketInteractionContext>
+{
+    private Locale _locale;
+
+    public override void BeforeExecute(ICommandInfo command)
+    {
+        _locale = localizer.GetLocale(Context.Interaction.UserLocale);
+    }
+
+    [SlashCommand("locale", "Set the locale for a voice channel you own")]
+    public Task SlashLocaleAsync(
+        [Autocomplete]
+        [Summary("locale", "The locale to set your voice channel responses to")]
+        string localeCode)
+    {
+        return SetLocaleAsync(localeCode);
+    }
+
+    [AutocompleteCommand("locale", "locale")]
+    public async Task AutofillLocaleAsync()
+    {
+        var interaction = Context.Interaction as SocketAutocompleteInteraction;
+        string userInput = interaction.Data.Current.Value.ToString();
+
+        var results = new List<AutocompleteResult>();
+        var matches = localizer.Locales.Where(x =>
+            x.Culture.TwoLetterISOLanguageName == userInput ||
+            x.Culture.DisplayName.Contains(userInput, StringComparison.OrdinalIgnoreCase) ||
+            x.Culture.NativeName.Contains(userInput, StringComparison.OrdinalIgnoreCase))
+            .OrderBy(x => x.Culture.TwoLetterISOLanguageName);
+
+        foreach (var match in matches)
+            results.Add(new AutocompleteResult(match.Culture.NativeName, match.Culture.TwoLetterISOLanguageName));
+
+        await interaction.RespondAsync(results);
+    }
+
+    [ComponentInteraction("locale_select:*", ignoreGroupNames: true)]
+    public Task SelectLocaleAsync(IVoiceChannel channel)
+    {
+        var interaction = Context.Interaction as SocketMessageComponent;
+        string userInput = interaction.Data.Values.SingleOrDefault();
+        return SetLocaleAsync(userInput);
+    }
+
+    [ComponentInteraction("locale_button:*", ignoreGroupNames: true)]
+    public async Task ButtonLocaleAsync(IVoiceChannel channel)
+    {
+        var menu = new SelectMenuBuilder("locale_select:" + channel.Id)
+            .WithPlaceholder("Select a locale");
+
+        foreach (var locale in localizer.Locales)
+            menu.AddOption(locale.Culture.DisplayName, locale.Culture.TwoLetterISOLanguageName, locale.Culture.NativeName);
+
+        var builder = new ComponentBuilder()
+            .AddRow(new(menu));
+
+        await RespondAsync(components: builder.Build());
+    }
+
+    private async Task SetLocaleAsync(string localeCode)
+    {
+        var locale = localizer.GetLocale(localeCode);
+        if (locale is null)
+        {
+            await RespondAsync("No matching locales found", ephemeral: true);
+            return;
+        }
+
+        var channel = await channels.GetAsync(Context.User.Id);
+
+        if (channel.PreferredLocale == locale.Culture.TwoLetterISOLanguageName)
+        {
+            await RespondAsync("The channel is already set to this locale", ephemeral: true);
+            return;
+        }
+
+        channel.PreferredLocale = locale.Culture.TwoLetterISOLanguageName;
+        await channels.ModifyAsync(channel);
+
+        await RespondAsync("The channel's locale will now default to {0}", ephemeral: true);
+    }
+}
