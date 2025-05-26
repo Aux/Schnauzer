@@ -10,6 +10,10 @@ public static class AutoModHelper
 {
     public static (bool IsBlocked, SocketAutoModRule Rule, string Keyword) IsBlocked(string input, SocketGuildUser user, Guild config)
     {
+        // If automod rule checks are disabled or no rules configured return
+        if ((!config.IsAutoModEnabled ?? false) || config.AutomodRuleIds is null)
+            return (false, null, null);
+
         // Exclude disabled, non keyword, or rules exempt by user roles
         var rules = user.Guild.AutoModRules.Where(x =>
             config.AutomodRuleIds.Contains(x.Id) &&         // Rule is configured
