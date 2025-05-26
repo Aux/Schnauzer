@@ -1,7 +1,7 @@
 ﻿using Discord;
 using Discord.Interactions;
 using Microsoft.Extensions.DependencyInjection;
-using Schnauzer.Data;
+using Schnauzer.Services;
 
 namespace Schnauzer.Discord;
 
@@ -10,20 +10,27 @@ public class RequireChannelOwnerAttribute : PreconditionAttribute
 {
     public override async Task<PreconditionResult> CheckRequirementsAsync(IInteractionContext context, ICommandInfo commandInfo, IServiceProvider services)
     {
+        var localizer = services.GetRequiredService<LocalizationProvider>();
+        var locale = localizer.GetLocale(context.Interaction.UserLocale);
+
         // This is just to get the GuildUser cast
         if (context.User is not IGuildUser user)
-            return PreconditionResult.FromError("It shouldn't be possible for this to happen, but you know...");
+            return PreconditionResult.FromError(locale.Get("errors:not_guilduser"));
+
+        // Ignore commands if the user isn't in a voice channel
+        if (user.VoiceChannel is null)
+            return PreconditionResult.FromError(locale.Get("errors:not_in_voice"));
 
         // Don't bother checking if the user is owner if they have enough guild permissions
         if (user.GuildPermissions.Administrator || user.GuildPermissions.ManageChannels)
             return PreconditionResult.FromSuccess();
 
         // Check if the user is the channel owner
-        var db = services.GetRequiredService<SchnauzerDb>();
-        var allowed = await SchnauzerDb.IsChannelOwnerAsync(db, context.Channel.Id, context.User.Id);
+        var cache = services.GetRequiredService<ChannelCache>();
+        var channel = await cache.GetAsync(context.User.Id);
 
-        if (allowed)
+        if (channel.Id == context.Channel.Id)
             return PreconditionResult.FromSuccess();
-        return PreconditionResult.FromError("You must be the channel owner to perform this action.");
+        return PreconditionResult.FromError(locale.Get("errors:not_owner"));
     }
 }
