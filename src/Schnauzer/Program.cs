@@ -48,7 +48,9 @@ using var host = Host.CreateDefaultBuilder(args)
     })
     .Build();
 
-host.Services.GetRequiredService<SchnauzerDb>().Database.EnsureCreated();
+var db = host.Services.GetRequiredService<SchnauzerDb>();
+await db.Database.MigrateAsync();
+
 host.Services.GetRequiredService<LocalizationProvider>();
 
 await host.RunAsync();

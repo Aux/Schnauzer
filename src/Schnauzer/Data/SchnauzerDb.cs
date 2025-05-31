@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 using Schnauzer.Data.Models;
 
 namespace Schnauzer.Data;
@@ -10,6 +11,24 @@ public class SchnauzerDb(
     public DbSet<Guild> Guilds { get; set; }
     public DbSet<Channel> Channels { get; set; }
     public DbSet<User> Users { get; set; }
+
+    public SchnauzerDb() : this(new()) { }
+
+    protected override void OnConfiguring(DbContextOptionsBuilder options)
+    {
+        base.OnConfiguring(options);
+
+        var config = new ConfigurationBuilder()
+            .AddEnvironmentVariables()
+            .Build();
+
+        options.EnableSensitiveDataLogging(true);
+        options.UseNpgsql($"" +
+            $"Host={config["PGHOST"]};" +
+            $"Username={config["PGUSER"]};" +
+            $"Password={config["PGPASSWORD"]};" +
+            $"Database={config["PGDATABASE"]};");
+    }
 
     protected override void OnModelCreating(ModelBuilder builder)
     {
