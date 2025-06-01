@@ -48,9 +48,11 @@ using var host = Host.CreateDefaultBuilder(args)
     })
     .Build();
 
+// Ensure db is created and on latest migration
 var db = host.Services.GetRequiredService<SchnauzerDb>();
 await db.Database.MigrateAsync();
 
+// Preload locale files
 host.Services.GetRequiredService<LocalizationProvider>();
 
 await host.RunAsync();
