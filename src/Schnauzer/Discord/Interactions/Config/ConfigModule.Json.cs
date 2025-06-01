@@ -5,6 +5,7 @@ using System.Text.Json;
 
 namespace Schnauzer.Discord.Interactions;
 
+// ConfigModule section for json import/export commands
 public partial class ConfigModule : InteractionModuleBase<SocketInteractionContext>
 {
     private static readonly JsonSerializerOptions JsonOptions = new() { WriteIndented = true };
@@ -18,7 +19,7 @@ public partial class ConfigModule : InteractionModuleBase<SocketInteractionConte
         await JsonSerializer.SerializeAsync(stream, config, JsonOptions);
 
         await RespondWithFileAsync(stream, $"{Context.Guild.Name} config.json", 
-            _locale.Get("config:export_json_success", Context.Guild.Name), ephemeral: true);
+            _locale.Get("config:json:export_success", Context.Guild.Name), ephemeral: true);
     }
 
     [SlashCommand("import", "Modify this server's configuration by uploading a json config file.")]
@@ -27,14 +28,14 @@ public partial class ConfigModule : InteractionModuleBase<SocketInteractionConte
         // Block oversized files
         if (attachment.Size > 1024 || attachment.Size == 0)
         {
-            await RespondAsync(_locale.Get("config:import_json_oversize_error"), ephemeral: true);
+            await RespondAsync(_locale.Get("config:json:import_oversize_error"), ephemeral: true);
             return;
         }
 
         // Block non-json files
         if (!attachment.Filename.EndsWith(".json"))
         {
-            await RespondAsync(_locale.Get("config:import_json_nonjson_error"), ephemeral: true);
+            await RespondAsync(_locale.Get("config:json:import_nonjson_error"), ephemeral: true);
             return;
         }
 
@@ -42,7 +43,7 @@ public partial class ConfigModule : InteractionModuleBase<SocketInteractionConte
         var content = await HttpHelper.DownloadStringAsync(attachment.Url);
         if (string.IsNullOrWhiteSpace(content))
         {
-            await RespondAsync(_locale.Get("config:import_json_empty_error"), ephemeral: true);
+            await RespondAsync(_locale.Get("config:json:import_empty_error"), ephemeral: true);
             return;
         }
 
@@ -53,7 +54,7 @@ public partial class ConfigModule : InteractionModuleBase<SocketInteractionConte
             imported = JsonSerializer.Deserialize<Guild>(content);
         } catch
         {
-            await RespondAsync(_locale.Get("config:import_json_invalid_error"), ephemeral: true);
+            await RespondAsync(_locale.Get("config:json:import_invalid_error"), ephemeral: true);
             return;
         }
 
@@ -95,6 +96,11 @@ public partial class ConfigModule : InteractionModuleBase<SocketInteractionConte
             changes.Add($"{nameof(config.MaxLobbyCount)}: {imported.MaxLobbyCount}");
             config.MaxLobbyCount = imported.MaxLobbyCount;
         }
+        if (config.AbandonedGracePeriod != imported.AbandonedGracePeriod)
+        {
+            changes.Add($"{nameof(config.AbandonedGracePeriod)}: {imported.AbandonedGracePeriod:dd\\.hh\\:mm\\:ss}");
+            config.AbandonedGracePeriod = imported.AbandonedGracePeriod;
+        }
         if (config.IsAutoModEnabled != imported.IsAutoModEnabled)
         {
             changes.Add($"{nameof(config.IsAutoModEnabled)}: {imported.IsAutoModEnabled}");
@@ -114,11 +120,11 @@ public partial class ConfigModule : InteractionModuleBase<SocketInteractionConte
         // Ignore if no changes made
         if (changes.Count == 0)
         {
-            await RespondAsync(_locale.Get("config:import_json_no_changes"), ephemeral: true);
+            await RespondAsync(_locale.Get("config:json:import_no_changes"), ephemeral: true);
             return;
         }
 
         await configs.ModifyAsync(config);
-        await RespondAsync(_locale.Get("config:import_json_success", string.Join('\n', changes)), ephemeral: true);
+        await RespondAsync(_locale.Get("config:json:import_success", string.Join('\n', changes)), ephemeral: true);
     }
 }

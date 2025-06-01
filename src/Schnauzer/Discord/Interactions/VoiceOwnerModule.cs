@@ -3,7 +3,6 @@ using Discord.Interactions;
 using Microsoft.EntityFrameworkCore;
 using Schnauzer.Data;
 using Schnauzer.Discord;
-using Schnauzer.Services;
 
 namespace Schnauzer.Interactions;
 
@@ -13,34 +12,6 @@ public class VoiceOwnerModule(
     SchnauzerDb db
     ) : InteractionModuleBase<SocketInteractionContext>
 {
-    [SlashCommand("rename", "Rename a voice channel you own.")]
-    public async Task RenameAsync(
-        [MinLength(1), MaxLength(50)]
-        [Summary(description: "The new name of your channel, must be between 1 and 50 characters long.")]
-        string newName)
-    {
-        if (Context.Channel is not IVoiceChannel channel)
-            return;
-
-        await channel.ModifyAsync(x => x.Name = newName,
-            new RequestOptions { AuditLogReason = $"Updated by @{Context.User.Username} ({Context.User.Id})" });
-        await RespondAsync($"{Context.User.Mention} updated the channel's name to `{newName}`", allowedMentions: AllowedMentions.None);
-    }
-
-    [SlashCommand("limit", "Change the user limit of a voice channel you own.")]
-    public async Task LimitAsync(
-        [MinValue(0), MaxValue(99)]
-        [Summary(description: "The max number of users that can join this channel, must be between 1 and 99, set to 0 for infinite.")]
-        int limit)
-    {
-        if (Context.Channel is not IVoiceChannel channel)
-            return;
-
-        await channel.ModifyAsync(x => x.UserLimit = limit,
-            new RequestOptions { AuditLogReason = $"Updated by @{Context.User.Username} ({Context.User.Id})" });
-        await RespondAsync($"{Context.User.Mention} updated the channel limit to `{limit}`", allowedMentions: AllowedMentions.None);
-    }
-
     [SlashCommand("kick", "Kick a user from a voice channel you own.")]
     public async Task KickAsync(
         [Summary(description: "The user to be kicked")]

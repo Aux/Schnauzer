@@ -1,24 +1,12 @@
 ﻿using Discord;
 using Discord.Interactions;
-using Schnauzer.Services;
+using Schnauzer.Data;
 
 namespace Schnauzer.Discord.Interactions;
 
-[RequireUserPermission(GuildPermission.Administrator)]
-[DefaultMemberPermissions(GuildPermission.Administrator)]
-[Group("config", "A collection of admin-only configuration commands")]
-public partial class ConfigModule(
-    LocalizationProvider localizer, 
-    ConfigCache configs, 
-    ChannelCache cache) : InteractionModuleBase<SocketInteractionContext>
+// ConfigModule section for lobby commands
+public partial class ConfigModule
 {
-    private Locale _locale;
-
-    public override void BeforeExecute(ICommandInfo command)
-    {
-        _locale = localizer.GetLocale(Context.Interaction.UserLocale);
-    }
-
     [SlashCommand("create-channel", "Set the voice channel users will join to create a dynamic voice channel")]
     public async Task SetCreateChannelAsync(
         [Summary(description: "The voice channel users will join")]
@@ -78,6 +66,31 @@ public partial class ConfigModule(
 
         await RespondAsync(_locale.Get("config:set_max_lobby_count_success", 
             config.MaxLobbyCount?.ToString() ?? "∞"), ephemeral: true);
+    }
+
+    [SlashCommand("set-grace-period", "Set the amount of time to wait before considering a voice channel abandoned.")]
+    public async Task SetAbandonedGracePeriodAsync(
+        [Summary(description: "")]
+        StringTime duration)
+    {
+        if (duration.Value < TimeSpan.FromSeconds(5))
+        {
+            await RespondAsync(_locale.Get("config:lobby:grace_period_undertime"), ephemeral: true);
+            return;
+        }
+
+        if (duration.Value > TimeSpan.FromHours(24))
+        {
+            await RespondAsync(_locale.Get("config:lobby:grace_period_overtime"), ephemeral: true);
+            return;
+        }
+
+        var config = await configs.GetAsync(Context.Guild.Id);
+        config.AbandonedGracePeriod = duration.Value;
+        await configs.ModifyAsync(config);
+
+        await RespondAsync(_locale.Get("config:lobby:set_grace_period_success",
+            config.AbandonedGracePeriod?.TotalMinutes), ephemeral: true);
     }
 
     [SlashCommand("deafened-toggle", "Enable or disable allowing server deafened users to own channels")]

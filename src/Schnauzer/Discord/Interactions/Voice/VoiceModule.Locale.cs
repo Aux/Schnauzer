@@ -1,26 +1,12 @@
 ﻿using Discord;
 using Discord.Interactions;
 using Discord.WebSocket;
-using Schnauzer.Services;
 
 namespace Schnauzer.Discord.Interactions;
 
-[RequireChannelOwner]
-[RequireContext(ContextType.Guild)]
-[Group("voice", "Management commands for channel owners.")]
-public partial class VoiceModule(
-    LocalizationProvider localizer, 
-    ConfigCache configs, 
-    ChannelCache channels) 
-    : InteractionModuleBase<SocketInteractionContext>
+// VoiceModule section for locale commands
+public partial class VoiceModule
 {
-    private Locale _locale;
-
-    public override void BeforeExecute(ICommandInfo command)
-    {
-        _locale = localizer.GetLocale(Context.Interaction.UserLocale);
-    }
-
     [SlashCommand("locale", "Set the locale for a voice channel you own")]
     public Task SlashLocaleAsync(
         [Autocomplete]
@@ -81,7 +67,7 @@ public partial class VoiceModule(
             return;
         }
 
-        var channel = await channels.GetAsync(Context.User.Id);
+        var channel = await channels.GetByOwnerAsync(Context.User.Id);
 
         if (channel.PreferredLocale == locale.Culture.TwoLetterISOLanguageName)
         {

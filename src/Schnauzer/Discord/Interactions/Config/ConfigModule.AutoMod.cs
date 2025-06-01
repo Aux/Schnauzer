@@ -3,6 +3,7 @@ using Discord.Interactions;
 
 namespace Schnauzer.Discord.Interactions;
 
+// ConfigModule section for automod integration commands
 public partial class ConfigModule : InteractionModuleBase<SocketInteractionContext>
 {
     [SlashCommand("automod-toggle", "Enable or disable AutoMod checks in channel names")]

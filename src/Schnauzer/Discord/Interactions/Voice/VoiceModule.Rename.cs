@@ -12,6 +12,7 @@ public class RenameModal : IModal
     public string NewName { get; set; }
 }
 
+// VoiceModule section for channel renaming commands
 public partial class VoiceModule : InteractionModuleBase<SocketInteractionContext>
 {
     [SlashCommand("rename", "Rename a voice channel you own.")]
@@ -34,8 +35,8 @@ public partial class VoiceModule : InteractionModuleBase<SocketInteractionContex
     {
         var modal = new ModalBuilder()
             .WithCustomId("rename_modal:" + channel.Id)
-            .WithTitle(_locale.Get("voicepanel:rename_modal_title"))
-            .AddTextInput(_locale.Get("voicepanel:rename_modal_input"), 
+            .WithTitle(_locale.Get("voice:rename:modal_title"))
+            .AddTextInput(_locale.Get("voice:rename:modal_input"), 
                 "new_name", placeholder: channel.Name,
                 minLength: 1, maxLength: 50, required: true);
 
@@ -69,12 +70,12 @@ public partial class VoiceModule : InteractionModuleBase<SocketInteractionContex
                 }
             }
 
-            await RespondAsync(_locale.Get("voice:rename_blocked_term_error"), ephemeral: true);
+            await RespondAsync(_locale.Get("voice:rename:blocked_term_error"), ephemeral: true);
             return;
         }
 
         await channel.ModifyAsync(x => x.Name = input,
             new RequestOptions { AuditLogReason = _locale.Get("log:updated_channel", Context.User.Username, Context.User.Id) });
-        await RespondAsync(_locale.Get("voice:rename_success", Context.User.Mention, input), allowedMentions: AllowedMentions.None);
+        await RespondAsync(_locale.Get("voice:rename:success", Context.User.Mention, input), allowedMentions: AllowedMentions.None);
     }
 }
