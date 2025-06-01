@@ -60,7 +60,7 @@ public class ChannelManager(
         }
 
         // Get the user's existing dynamic channel or create one
-        var channel = await channels.GetAsync(user.Id);
+        var channel = await channels.GetByOwnerAsync(user.Id);
         if (channel is null)
         {
             // Check if the user's name contains automod blocked terms
@@ -114,6 +114,9 @@ public class ChannelManager(
         // Move the user (owner) to the dynamic channel
         await user.ModifyAsync(x =>  x.ChannelId = channel.Id);
 
+        // Remove the abandoned timer if one exists
+        gracePeriod.TryStopTimer(state.VoiceChannel, user);
+
         // Create the owner panel message if it doesn't exist
         if (channel.PanelMessageId == null)
             await CreateOrModifyPanelAsync(channel, user, locale);
@@ -135,7 +138,7 @@ public class ChannelManager(
         var locale = localizer.GetLocale(config.PreferredLocale);
 
         // Get channel config
-        var channel = await channels.GetAsync(user.Id);
+        var channel = await channels.GetByOwnerAsync(user.Id);
 
         // Channel is empty
         if (state.VoiceChannel.ConnectedUsers.Count == 0)
@@ -155,7 +158,7 @@ public class ChannelManager(
         // The dynamic channel is orphaned
         if (channel.OwnerId == user.Id)
         {
-            gracePeriod.TryStartTimer(state.VoiceChannel, user, locale);
+            gracePeriod.TryStartTimer(state.VoiceChannel, user, locale, config.AbandonedGracePeriod ?? TimeSpan.FromSeconds(30));
             return;
         }
     }
@@ -163,7 +166,7 @@ public class ChannelManager(
     /// <summary>
     ///     Create or modify a dynamic channel panel message
     /// </summary>
-    public async Task CreateOrModifyPanelAsync(Channel channel, SocketGuildUser user, Locale locale)
+    public async Task CreateOrModifyPanelAsync(Channel channel, IGuildUser user, Locale locale)
     {
         // Get voice commands to mention
         var commands = await user.Guild.GetApplicationCommandsAsync();
@@ -186,6 +189,27 @@ public class ChannelManager(
             .WithEmote(new Emoji("🌎"))
             .WithLabel(locale.Get("voicepanel:locale_button_name"));
 
+        var kickButton = new ButtonBuilder()
+            .WithCustomId("kick_button:" + channel.Id)
+            .WithStyle(ButtonStyle.Danger)
+            .WithEmote(new Emoji("🍃"))
+            .WithLabel("Kick");
+        var blockButton = new ButtonBuilder()
+            .WithCustomId("block_button:" + channel.Id)
+            .WithStyle(ButtonStyle.Danger)
+            .WithEmote(new Emoji("🔨"))
+            .WithLabel("Block");
+        var unblockButton = new ButtonBuilder()
+            .WithCustomId("unblock_button:" + channel.Id)
+            .WithStyle(ButtonStyle.Danger)
+            .WithEmote(new Emoji("🙏"))
+            .WithLabel("Unblock");
+        var transferButton = new ButtonBuilder()
+            .WithCustomId("transfer_button:" + channel.Id)
+            .WithStyle(ButtonStyle.Success)
+            .WithEmote(new Emoji("🥏"))
+            .WithLabel("Transfer");
+
         // Create components panel
         var builder = new ComponentBuilderV2()
             .WithContainer(new ContainerBuilder()
@@ -201,6 +225,11 @@ public class ChannelManager(
                     .WithButton(renameButton)
                     .WithButton(limitButton)
                     .WithButton(localeButton))
+                .WithActionRow(new ActionRowBuilder()
+                    .WithButton(kickButton)
+                    .WithButton(blockButton)
+                    .WithButton(unblockButton)
+                    .WithButton(transferButton))
             );
         
         // Send or modify panel message

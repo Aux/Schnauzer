@@ -24,23 +24,31 @@ public class ChannelCache(
     /// <summary>
     ///     Get the dynamic channel settings for a voice channel
     /// </summary>
-    public async Task<Channel> GetAsync(ulong userId)
+    public Task<Channel> GetAsync(ulong channelId)
     {
-        if (cache.TryGetValue<Channel>($"channel:{userId}", out var channel))
+        return SchnauzerDb.GetChannelAsync(db, channelId);
+    }
+
+    /// <summary>
+    ///     Get the dynamic channel settings for a voice channel by owner id
+    /// </summary>
+    public async Task<Channel> GetByOwnerAsync(ulong ownerId)
+    {
+        if (cache.TryGetValue<Channel>($"channel:{ownerId}", out var channel))
         {
-            logger.LogDebug("Returned `channel:{Id}` from cache", userId);
+            logger.LogDebug("Returned `channel:{Id}` from cache", ownerId);
             return channel;
         }
 
-        channel = await SchnauzerDb.GetChannelByOwnerAsync(db, userId);
+        channel = await SchnauzerDb.GetChannelByOwnerAsync(db, ownerId);
         if (channel is not null)
         {
-            cache.Set($"channel:{userId}", channel);
-            logger.LogDebug("Added `channel:{Id}` to cache", userId);
+            cache.Set($"channel:{ownerId}", channel);
+            logger.LogDebug("Added `channel:{Id}` to cache", ownerId);
             return channel;
         }
 
-        logger.LogDebug("`channel:{Id}` was not in the cache or db", userId);
+        logger.LogDebug("`channel:{Id}` was not in the cache or db", ownerId);
         return null;
     }
 
@@ -49,7 +57,7 @@ public class ChannelCache(
     /// </summary>
     public async Task<bool> TryCreateAsync(Channel channel)
     {
-        var existing = await GetAsync(channel.OwnerId);
+        var existing = await GetByOwnerAsync(channel.OwnerId);
         if (existing is not null)
         {
             logger.LogDebug("Did not create `channel:{Id}`, already exists", channel.OwnerId);
@@ -79,18 +87,28 @@ public class ChannelCache(
     /// <summary>
     ///     Delete a dynamic channel from both the cache and database.
     /// </summary>
-    public async Task DeleteAsync(ulong userId)
+    public async Task DeleteAsync(ulong ownerId)
     {
-        if (!cache.TryGetValue<Channel>($"channel:{userId}", out var channel))
-        {
-            logger.LogDebug("Did not delete `channel:{Id}` from cache and db, does not exist.", userId);
-            return;
-        }
+        var channel = Remove(ownerId);
 
         db.Remove(channel);
         await db.SaveChangesAsync();
-        cache.Remove($"channel:{userId}");
 
-        logger.LogDebug("Deleted `channel:{Id}` from cache and db", userId);
+        logger.LogDebug("Deleted `channel:{Id}` from cache and db", ownerId);
+    }
+
+    /// <summary>
+    ///     Remove a dynamic channel from the cache
+    /// </summary>
+    public Channel Remove(ulong ownerId)
+    {
+        if (!cache.TryGetValue<Channel>($"channel:{ownerId}", out var channel))
+        {
+            logger.LogDebug("Did not delete `channel:{Id}` from cache and db, does not exist.", ownerId);
+            return null;
+        }
+
+        cache.Remove($"channel:{ownerId}");
+        return channel;
     }
 }

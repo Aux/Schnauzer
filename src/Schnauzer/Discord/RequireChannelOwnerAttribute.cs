@@ -27,7 +27,7 @@ public class RequireChannelOwnerAttribute : PreconditionAttribute
 
         // Check if the user is the channel owner
         var cache = services.GetRequiredService<ChannelCache>();
-        var channel = await cache.GetAsync(context.User.Id);
+        var channel = await cache.GetByOwnerAsync(context.User.Id);
 
         if (channel.Id == context.Channel.Id)
             return PreconditionResult.FromSuccess();
