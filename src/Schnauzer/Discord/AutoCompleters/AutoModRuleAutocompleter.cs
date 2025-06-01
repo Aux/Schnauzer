@@ -18,7 +18,10 @@ public class AutoModRuleAutocompleter : AutocompleteHandler
             results.AddRange(rules.Select(x => new AutocompleteResult(x.Name, x.Id.ToString())));
         else
             results.AddRange(rules
-                .Where(x => x.Id.ToString() == value || x.Name.Contains(value, StringComparison.InvariantCultureIgnoreCase))
+                .Where(x => 
+                    x.Id.ToString() == value || 
+                    x.Name.Contains(value, StringComparison.InvariantCultureIgnoreCase) ||
+                    x.TriggerType == AutoModTriggerType.Keyword)
                 .Select(x => new AutocompleteResult(x.Name, x.Id.ToString())));
 
         return AutocompletionResult.FromSuccess(results);
