@@ -24,18 +24,26 @@ public partial class ConfigModule(
     {
         var config = await configs.GetAsync(Context.Guild.Id);
 
+        string canOwnRoleValues = config.CanOwnRoleIds is not null && config.CanOwnRoleIds?.Count > 0
+            ? string.Join(',', config.CanOwnRoleIds) 
+            : "*none set*";
+        string automodRuleValues = config.AutomodRuleIds is not null && config.AutomodRuleIds?.Count > 0
+            ? string.Join(',', config.AutomodRuleIds)
+            : "*none set*";
+        string gracePeriodValue = $"{config.AbandonedGracePeriod?.TotalMinutes ?? GracePeriodService.DefaultDuration.TotalMinutes} minute(s)";
+
         string configDisplay = $"" +
-            $"{nameof(config.CreateChannelId)}: {config.CreateChannelId}" +
-            $"{nameof(config.CanOwnRoleIds)}: {string.Join(',', config.CanOwnRoleIds)}" +
-            $"{nameof(config.DenyDeafenedOwnership)}: {config.DenyDeafenedOwnership}" +
-            $"{nameof(config.DenyMutedOwnership)}: {config.DenyMutedOwnership}" +
-            $"{nameof(config.DefaultLobbySize)}: {config.DefaultLobbySize}" +
-            $"{nameof(config.MaxLobbySize)}: {config.MaxLobbySize}" +
-            $"{nameof(config.MaxLobbyCount)}: {config.MaxLobbyCount}" +
-            $"{nameof(config.AbandonedGracePeriod)}: {config.AbandonedGracePeriod?.TotalMinutes} minute(s)" +
-            $"{nameof(config.IsAutoModEnabled)}: {config.IsAutoModEnabled}" +
-            $"{nameof(config.AutoModLogChannelId)}: {config.AutoModLogChannelId}" +
-            $"{nameof(config.AutomodRuleIds)}: {string.Join(',', config.AutomodRuleIds)}";
+            $"**{nameof(config.CreateChannelId)}**: {config.CreateChannelId?.ToString() ?? "*none set*"}\n" +
+            $"**{nameof(config.CanOwnRoleIds)}**: {canOwnRoleValues}\n" +
+            $"**{nameof(config.DenyDeafenedOwnership)}**: {config.DenyDeafenedOwnership?.ToString() ?? "True"}\n" +
+            $"**{nameof(config.DenyMutedOwnership)}**: {config.DenyMutedOwnership?.ToString() ?? "True"}\n" +
+            $"**{nameof(config.DefaultLobbySize)}**: {config.DefaultLobbySize?.ToString() ?? "4"}\n" +
+            $"**{nameof(config.MaxLobbySize)}**: {config.MaxLobbySize?.ToString() ?? "∞"}\n" +
+            $"**{nameof(config.MaxLobbyCount)}**: {config.MaxLobbyCount?.ToString() ?? "∞"}\n" +
+            $"**{nameof(config.AbandonedGracePeriod)}**: {gracePeriodValue}\n" +
+            $"**{nameof(config.IsAutoModEnabled)}**: {config.IsAutoModEnabled?.ToString() ?? "False"}\n" +
+            $"**{nameof(config.AutoModLogChannelId)}**: {config.AutoModLogChannelId?.ToString() ?? "*none set*"}\n" +
+            $"**{nameof(config.AutomodRuleIds)}**: {automodRuleValues}\n";
 
         var embed = new EmbedBuilder()
             .WithTitle("Current Configuration")
