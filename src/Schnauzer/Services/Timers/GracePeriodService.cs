@@ -5,6 +5,8 @@ namespace Schnauzer.Services;
 
 public class GracePeriodService
 {
+    public static readonly TimeSpan DefaultDuration = TimeSpan.FromSeconds(30);
+
     private ConcurrentDictionary<ulong, Timer> _gracePeriods = new();
 
     public bool TryStartTimer(IVoiceChannel channel, IGuildUser owner, Locale locale, TimeSpan duration)

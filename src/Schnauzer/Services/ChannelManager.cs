@@ -158,7 +158,7 @@ public class ChannelManager(
         // The dynamic channel is orphaned
         if (channel.OwnerId == user.Id)
         {
-            gracePeriod.TryStartTimer(state.VoiceChannel, user, locale, config.AbandonedGracePeriod ?? TimeSpan.FromSeconds(30));
+            gracePeriod.TryStartTimer(state.VoiceChannel, user, locale, config.AbandonedGracePeriod ?? GracePeriodService.DefaultDuration);
             return;
         }
     }
