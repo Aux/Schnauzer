@@ -69,7 +69,8 @@ public class ChannelManager(
                 var result = AutoModHelper.IsBlocked(user.DisplayName, user, config);
                 if (result.IsBlocked)
                 {
-                    await user.KickAsync(locale.Get("log:blocked_channel_create", result.Rule.Name, result.Keyword));
+                    await user.ModifyAsync(x => x.Channel = null,
+                        new RequestOptions { AuditLogReason = locale.Get("log:blocked_channel_create", result.Rule.Name, result.Keyword) });
                     return;
                 }
             }
