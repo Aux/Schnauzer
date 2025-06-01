@@ -47,7 +47,7 @@ public partial class VoiceModule
     public async Task ButtonLocaleAsync(IVoiceChannel channel)
     {
         var menu = new SelectMenuBuilder("locale_select:" + channel.Id)
-            .WithPlaceholder("Select a locale");
+            .WithPlaceholder(_locale.Get("voice:locale:select_placeholder"));
 
         foreach (var locale in localizer.Locales)
             menu.AddOption(locale.Culture.DisplayName, locale.Culture.TwoLetterISOLanguageName, locale.Culture.NativeName);
@@ -55,7 +55,7 @@ public partial class VoiceModule
         var builder = new ComponentBuilder()
             .AddRow(new(menu));
 
-        await RespondAsync(components: builder.Build());
+        await RespondAsync(components: builder.Build(), ephemeral: true);
     }
 
     private async Task SetLocaleAsync(string localeCode)
@@ -63,7 +63,7 @@ public partial class VoiceModule
         var locale = localizer.GetLocale(localeCode);
         if (locale is null)
         {
-            await RespondAsync("No matching locales found", ephemeral: true);
+            await RespondAsync(_locale.Get("voice:locale:no_matches_error"), ephemeral: true);
             return;
         }
 
@@ -71,13 +71,13 @@ public partial class VoiceModule
 
         if (channel.PreferredLocale == locale.Culture.TwoLetterISOLanguageName)
         {
-            await RespondAsync("The channel is already set to this locale", ephemeral: true);
+            await RespondAsync(_locale.Get("voice:locale:already_set_error"), ephemeral: true);
             return;
         }
 
         channel.PreferredLocale = locale.Culture.TwoLetterISOLanguageName;
         await channels.ModifyAsync(channel);
 
-        await RespondAsync("The channel's locale will now default to {0}", ephemeral: true);
+        await RespondAsync(_locale.Get("voice:locale:success", locale.Culture.DisplayName), ephemeral: true);
     }
 }
