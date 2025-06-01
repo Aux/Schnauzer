@@ -61,10 +61,10 @@ public partial class VoiceModule : InteractionModuleBase<SocketInteractionContex
                         .WithTitle("Blocked Channel Update")
                         .WithThumbnailUrl(Context.User.GetAvatarUrl())
                         .WithDescription($"> **User:** {Context.User.Mention} (@{Context.User.Username})\n" +
-                                         $"> **Channel:** {channel.Mention}\n" +
-                                         $"> **Blocked Text:** `{input}`\n" +
+                                         $"> **Channel:** {channel.Mention} ({channel.Name})\n" +
                                          $"> **Rule:** {result.Rule.Name}\n" +
-                                         $"> **Keyword:** `{result.Keyword}`")
+                                         $"> **Keyword:** `{result.Keyword}`\n" +
+                                         $"> **Blocked Text:** `{input}`")
                         .WithCurrentTimestamp();
                     await logTo.SendMessageAsync(embed: embed.Build());
                 }

@@ -71,6 +71,26 @@ public class ChannelManager(
                 {
                     await user.ModifyAsync(x => x.Channel = null,
                         new RequestOptions { AuditLogReason = locale.Get("log:blocked_channel_create", result.Rule.Name, result.Keyword) });
+
+                    if (config.AutoModLogChannelId is not null)
+                    {
+                        var logTo = user.Guild.GetTextChannel(config.AutoModLogChannelId.Value);
+                        if (logTo is not null)
+                        {
+                            var embed = new EmbedBuilder()
+                                .WithColor(Color.Red)
+                                .WithTitle("Blocked Channel Create")
+                                .WithThumbnailUrl(user.GetAvatarUrl())
+                                .WithDescription($"> **User:** {user.Mention} (@{user.Username})\n" +
+                                                 $"> **Channel:** {state.VoiceChannel.Mention} ({state.VoiceChannel.Name})\n" +
+                                                 $"> **Rule:** {result.Rule.Name}\n" +
+                                                 $"> **Keyword:** `{result.Keyword}`\n" +
+                                                 $"> **Blocked Text:** `{user.DisplayName}`")
+                                .WithCurrentTimestamp();
+                            await logTo.SendMessageAsync(embed: embed.Build());
+                        }
+                    }
+
                     return;
                 }
             }
