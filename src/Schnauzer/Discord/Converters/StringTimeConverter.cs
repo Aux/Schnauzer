@@ -2,7 +2,7 @@
 using Discord.Interactions;
 using Schnauzer.Data;
 
-namespace Schnauzer.Discord.Converters;
+namespace Schnauzer.Discord;
 
 public class StringTimeConverter : TypeConverter<StringTime>
 {

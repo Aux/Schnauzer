@@ -48,16 +48,17 @@ public static class AutoModHelper
             bool wildStart = keyword.StartsWith('*');
             bool wildEnd = keyword.EndsWith('*');
 
-            string pattern = keyword;       // *word*
+            string safeKeyword = Regex.Escape(keyword.Trim('*'));
+            string pattern = safeKeyword;       // *word*
 
             if (!wildStart && !wildEnd)     // word
-                pattern = @$"(\s+|^){keyword}(\s+|$)";
+                pattern = @$"(\s+|^){safeKeyword}(\s+|$)";
             else
             if (wildStart && !wildEnd)      // *word
-                pattern = @$"{keyword}(\s+|$)";
+                pattern = @$"{safeKeyword}(\s+|$)";
             else
             if (!wildStart && wildEnd)      // word*
-                pattern = @$"(\s+|^){keyword}";
+                pattern = @$"(\s+|^){safeKeyword}";
 
             var match = Regex.Match(input, pattern);
             if (match.Success)

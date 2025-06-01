@@ -3,11 +3,9 @@ using Discord.Interactions;
 using Discord.WebSocket;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
-using Microsoft.VisualBasic;
 using Schnauzer.Data;
-using Schnauzer.Discord.Converters;
+using Schnauzer.Discord;
 using Schnauzer.Discord.Interactions;
-using Schnauzer.Interactions;
 
 namespace Schnauzer.Services;
 
@@ -32,12 +30,14 @@ public class InteractionsHost(
         interactions.AddComponentTypeConverter<StringTime>(new StringTimeComponentConverter());
         interactions.AddTypeConverter<StringTime>(new StringTimeConverter());
         interactions.AddTypeReader<StringTime>(new StringTimeTypeReader());
+        interactions.AddComponentTypeConverter<IAutoModRule>(new AutoModRuleComponentConverter());
+        interactions.AddTypeConverter<IAutoModRule>(new AutoModRuleConverter());
+        interactions.AddTypeReader<IAutoModRule>(new AutoModRuleTypeReader());
 
         await interactions.AddModuleAsync<AboutModule>(services);
-
-        //await interactions.AddModuleAsync<ConfigAutomodModule>(services);
         await interactions.AddModuleAsync<ConfigModule>(services);
         await interactions.AddModuleAsync<VoiceModule>(services);
+        await interactions.AddModuleAsync<ClaimModule>(services);
     }
 
     public Task StopAsync(CancellationToken cancellationToken)

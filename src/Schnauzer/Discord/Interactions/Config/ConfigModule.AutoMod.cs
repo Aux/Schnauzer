@@ -38,7 +38,9 @@ public partial class ConfigModule : InteractionModuleBase<SocketInteractionConte
     }
 
     [SlashCommand("automod-add", "Add AutoMod rule")]
-    public async Task AddRuleAsync(IAutoModRule rule)
+    public async Task AddRuleAsync(
+        [Autocomplete(typeof(AutoModRuleAutocompleter))]
+        IAutoModRule rule)
     {
         // Only custom keyword rules provide the list of words to block
         if (rule.TriggerType != AutoModTriggerType.Keyword)
@@ -55,7 +57,7 @@ public partial class ConfigModule : InteractionModuleBase<SocketInteractionConte
             return;
         }
 
-        if (config.AutomodRuleIds is null)
+        if (config.AutomodRuleIds is not null)
             config.AutomodRuleIds?.Add(rule.Id);
         else
             config.AutomodRuleIds = [rule.Id];
@@ -66,7 +68,9 @@ public partial class ConfigModule : InteractionModuleBase<SocketInteractionConte
     }
 
     [SlashCommand("automod-remove", "Remove AutoMod rule")]
-    public async Task RemoveRuleAsync(IAutoModRule rule)
+    public async Task RemoveRuleAsync(
+        [Autocomplete(typeof(AutoModRuleAutocompleter))]
+        IAutoModRule rule)
     {
         var config = await configs.GetAsync(Context.Guild.Id);
 
