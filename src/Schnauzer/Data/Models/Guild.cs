@@ -18,6 +18,7 @@ public class Guild
     public int? DefaultLobbySize { get; set; }
     public int? MaxLobbySize { get; set; }
     public int? MaxLobbyCount { get; set; }
+    public TimeSpan? AbandonedGracePeriod { get; set; }
 
     public bool? IsAutoModEnabled { get; set; }
     public ulong? AutoModLogChannelId { get; set; }

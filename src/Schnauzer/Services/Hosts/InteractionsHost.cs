@@ -3,6 +3,9 @@ using Discord.Interactions;
 using Discord.WebSocket;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using Microsoft.VisualBasic;
+using Schnauzer.Data;
+using Schnauzer.Discord.Converters;
 using Schnauzer.Discord.Interactions;
 using Schnauzer.Interactions;
 
@@ -25,6 +28,10 @@ public class InteractionsHost(
         };
         discord.GuildAvailable += guild => interactions.RegisterCommandsToGuildAsync(guild.Id, true);
         discord.InteractionCreated += OnInteractionAsync;
+
+        interactions.AddComponentTypeConverter<StringTime>(new StringTimeComponentConverter());
+        interactions.AddTypeConverter<StringTime>(new StringTimeConverter());
+        interactions.AddTypeReader<StringTime>(new StringTimeTypeReader());
 
         await interactions.AddModuleAsync<AboutModule>(services);
 

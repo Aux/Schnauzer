@@ -7,10 +7,10 @@ public class GracePeriodService
 {
     private ConcurrentDictionary<ulong, Timer> _gracePeriods = new();
 
-    public bool TryStartTimer(IVoiceChannel channel, IGuildUser owner, Locale locale)
+    public bool TryStartTimer(IVoiceChannel channel, IGuildUser owner, Locale locale, TimeSpan duration)
     {
-        var timer = new Timer(OnTimerTick, (channel, owner, locale), 
-            TimeSpan.FromSeconds(30), TimeSpan.FromSeconds(30));
+        var timer = new Timer(OnTimerTick, (channel, owner, locale),
+            duration, Timeout.InfiniteTimeSpan);
 
         return _gracePeriods.TryAdd(channel.Id, timer);
     }
