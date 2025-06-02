@@ -11,7 +11,7 @@
       "other_server_channel": "User already owns a dynamic channel in another server {0}",
       "deny_deafened_ownership": "User is server deafened and not allowed to create a channel.",
       "deny_muted_ownership": "User is server muted and not allowed to create a channel.",
-      "no_owner_roles": "User does not have a role that permits channel ownership",
+      "no_owner_roles": "The audit log reason provided when disconnecting a user from the Create channel for not having an accepted ownership role.",
       "updated_channel": "Updated by @{0} ({1})",
       "voice_kick": "Kicked by @{0} ({1})\nReason: {2}",
       "voice_block": "Blocked by @{0} ({1})\nReason: {2}",
