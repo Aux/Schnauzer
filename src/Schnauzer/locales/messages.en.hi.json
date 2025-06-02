@@ -1,0 +1,155 @@
+{
+  "id": "en-US",
+  "name": "English",
+  "entries": {
+    "no_value": "*none set*",
+    "enabled": "enabled",
+    "disabled": "disabled",
+    "log": {
+      "delete_empty_channel": "Dynamic voice channel is empty",
+      "create_new_channel": "Created dynamic channel for @{0} ({1})",
+      "other_server_channel": "User already owns a dynamic channel in another server {0}",
+      "deny_deafened_ownership": "User is server deafened and not allowed to create a channel.",
+      "deny_muted_ownership": "User is server muted and not allowed to create a channel.",
+      "no_owner_roles": "User does not have a role that permits channel ownership",
+      "updated_channel": "Updated by @{0} ({1})",
+      "voice_kick": "Kicked by @{0} ({1})\nReason: {2}",
+      "voice_block": "Blocked by @{0} ({1})\nReason: {2}",
+      "voice_unblock": "Unblocked by @{0} ({1})\nReason: {2}",
+      "voice_transfer": "Transferring ownership to @{0} ({1})",
+      "blocked_channel_create": "Tried to create a channel with a term blocked by the rule {0}: `{1}`",
+      "blocked_channel_rename": "{0} tried to rename a channel with a term blocked by the rule {1}: `{2}`",
+      "forgotten_channel": "Cleaning up a forgotten dynamic channel",
+      "transfer_to": "Transferring ownership to @{0} ({1})",
+      "transfer_from": "Transferring ownership from @{0} ({1})"
+    },
+    "errors": {
+      "not_guilduser": "This command can only be used from inside a guild.",
+      "not_in_voice": "You must be in a voice channel to use this command.",
+      "not_owner": "This command can only be used by a channel owner."
+    },
+    "graceperiod": {
+      "claim_button_name": "Claim Ownership",
+      "claim_msg": "Looks like the channel owner, {0}, has abandoned the channel. Anyone can now click this button to claim ownership."
+    },
+    "about": {
+      "recent_changes": "Recent Changes",
+      "latency": "Latency",
+      "uptime": "Uptime"
+    },
+    "claim": {
+      "not_in_channel_error": "You can't claim a channel you aren't currently in.",
+      "server_deafened_error": "You can't claim a channel if you are server deafened.",
+      "server_muted_error": "You can't claim a channel if you are server muted.",
+      "no_owner_role_error": "You can't claim a channel without at least one ownership role.",
+      "already_owner_error": "You're already the owner of {0}",
+      "delete_claim_msg": "Channel can not be claimed at this moment.",
+      "not_abandoned_error": "You can't claim a channel that isn't abandoned.",
+      "success": "{0} is now the owner of this channel."
+    },
+    "config": {
+      "automod": {
+        "toggle_enabled": "AutoMod checks for dynamic channel names is now enabled",
+        "toggle_disabled": "AutoMod checks for dynamic channel names is now disabled",
+        "set_logto_disabled": "Logging AutoMod rule violations is now disabled",
+        "set_logto_success": "AutoMod rule violations will now be logged to {0}",
+        "add_rule_keyword_error": "Only keyword triggered AutoMod rules can be configured",
+        "add_rule_duplicate_error": "The rule `{0}` was not added, it is already configured",
+        "add_rule_success": "The rule `{0}` has been added",
+        "remove_rule_missing_error": "The rule `{0}` was not removed, it is not configured",
+        "remove_rule_success": "The rule `{0}` has been removed"
+      },
+      "json": {
+        "export_success": "Alright, here's the config file for {0}",
+        "import_oversize_error": "The provided file cannot be more than 1kb in size.",
+        "import_nonjson_error": "The provided file must be in a JSON format.",
+        "import_empty_error": "The provided file had no contents.",
+        "import_invalid_error": "An error ocurred while deserializing the provided file, is the file properly JSON formatted?",
+        "import_no_changes": "No changes detected between this file and the current config.",
+        "import_success": "Changes saved:\n{0}"
+      },
+      "lobby": {
+        "set_dynamic_error": "You can't set a dynamic channel as the Create Channel.",
+        "set_dupe_error": "{0} is already set as the current Create Channel.",
+        "set_create_success": "{0} has been set as the Create Channel.",
+        "set_default_size_success": "The default user limit of dynamic channels is now `{0}`",
+        "set_max_size_success": "The max user limit of dynamic channels is now `{0}`",
+        "set_max_count_success": "The max number of dynamic channels is now `{0}`",
+        "grace_period_undertime": "The specified grace period duration cannot be less than 5 seconds.",
+        "grace_period_overtime": "The specified grace period duration cannot be more than 24 hours.",
+        "set_grace_period_success": "The ownership abandonment grace period is now `{0} minute(s)`",
+        "toggle_deny_deafened": "Deafened users are no longer allowed to own dynamic voice channels",
+        "toggle_allow_deafened": "Deafened users are now able to own dynamic voice channels",
+        "toggle_deny_muted": "Muted users are no longer allowed to own dynamic voice channels",
+        "toggle_allow_muted": "Muted users are now able to own dynamic voice channels",
+        "add_owner_roles_success": "Added {0}, these roles are now allowed to claim ownership of a dynamic channel: {1}",
+        "remove_owner_roles_error": "The role {0} was not a configured ownership role.",
+        "remove_owner_roles_success": "Removed {0}, these roles are now allowed to claim ownership of a dynamic channel: {1}"
+      },
+      "show": {
+        "embed_title": "Current Configuration"
+      }
+    },
+    "voice": {
+      "block": {
+        "self_error": "You can't block yourself 🙄",
+        "dupe_error": "{0} is already blocked from this channel.",
+        "mod_error": "You can't block server moderators.",
+        "success": "{0} can no longer join this voice channel"
+      },
+      "unblock": {
+        "self_error": "You can't unblock yourself 🙄",
+        "missing_error": "{0} isn't blocked from this channel.",
+        "success": "{0} is no longer blocked from this channel."
+      },
+      "kick": {
+        "self_error": "You can't kick yourself 🙄",
+        "success": "{0} has been removed from the channel."
+      },
+      "limit": {
+        "not_a_number_error": "`{0}` is not a valid number, please try again.",
+        "out_of_range_error": "`{0}` is out of the acceptable user limit range.",
+        "modal_title": "Change Voice Channel Limit",
+        "modal_input": "New Limit",
+        "success": "{0} updated the channel limit to `{1}`"
+      },
+      "locale": {
+        "select_placeholder": "Select a locale",
+        "no_matches_error": "No matching locales found",
+        "already_set_error": "The channel is already set to this locale",
+        "success": "The channel's locale will now default to {0}"
+      },
+      "rename": {
+        "modal_title": "Rename Voice Channel",
+        "modal_input": "New Name",
+        "blocked_term_error": "Unable to rename channel, input contained blocked terms.",
+        "success": "{0} updated the channel's name to `{1}`"
+      },
+      "transfer": {
+        "not_in_voice_error": "You must be in the voice channel you own to use this command.",
+        "target_not_in_voice_error": "The target user must be in the voice channel to transfer ownership.",
+        "confirm_text": "You are about to transfer ownership of the channel to {0}. Are you sure?",
+        "confirm_label": "Confirm",
+        "select_placeholder": "Select a user",
+        "server_deafened_error": "The target user cannot be server deafened.",
+        "server_muted_error": "The target user cannot be server muted.",
+        "no_owner_role_error": "The target user does not have a role that allows ownership of a voice channel.",
+        "already_owner_error": "The target user is already the owner of a voice channel.",
+        "success": "{0} has transferred ownership of the channel to {1}"
+      }
+    },
+    "panel": {
+      "rename_button_name": "Rename",
+      "limit_button_name": "Limit",
+      "locale_button_name": "Locale",
+      "kick_button_name": "Kick",
+      "block_button_name": "Block",
+      "unblock_button_name": "Unblock",
+      "transfer_button_name": "Transfer",
+      "title": "Voice Channel Controls",
+      "owner_field": "Owner",
+      "locale_field": "Locale",
+      "commands_field": "Commands"
+    }
+  }
+}
