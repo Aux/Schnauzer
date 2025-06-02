@@ -14,21 +14,21 @@ public class SchnauzerDb(
 
     public SchnauzerDb() : this(new()) { }
 
-    protected override void OnConfiguring(DbContextOptionsBuilder options)
-    {
-        base.OnConfiguring(options);
+    //protected override void OnConfiguring(DbContextOptionsBuilder options)
+    //{
+    //    base.OnConfiguring(options);
 
-        var config = new ConfigurationBuilder()
-            .AddEnvironmentVariables()
-            .Build();
+    //    var config = new ConfigurationBuilder()
+    //        .AddEnvironmentVariables()
+    //        .Build();
 
-        options.EnableSensitiveDataLogging(true);
-        options.UseNpgsql($"" +
-            $"Host={config["PGHOST"]};" +
-            $"Username={config["PGUSER"]};" +
-            $"Password={config["PGPASSWORD"]};" +
-            $"Database={config["PGDATABASE"]};");
-    }
+    //    options.EnableSensitiveDataLogging(true);
+    //    options.UseNpgsql($"" +
+    //        $"Host={config["PGHOST"]};" +
+    //        $"Username={config["PGUSER"]};" +
+    //        $"Password={config["PGPASSWORD"]};" +
+    //        $"Database={config["PGDATABASE"]};");
+    //}
 
     protected override void OnModelCreating(ModelBuilder builder)
     {
