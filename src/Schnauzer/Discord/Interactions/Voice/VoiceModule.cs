@@ -9,7 +9,8 @@ namespace Schnauzer.Discord.Interactions;
 public partial class VoiceModule(
     LocalizationProvider localizer,
     ConfigCache configs,
-    ChannelCache channels)
+    ChannelCache channels,
+    ChannelManager manager)
     : InteractionModuleBase<SocketInteractionContext>
 {
     private Locale _locale;
