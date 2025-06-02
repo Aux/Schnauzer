@@ -198,48 +198,48 @@ public class ChannelManager(
             .WithCustomId("rename_button:" + channel.Id)
             .WithStyle(ButtonStyle.Primary)
             .WithEmote(new Emoji("✏️"))
-            .WithLabel(locale.Get("voicepanel:rename_button_name"));
+            .WithLabel(locale.Get("panel:rename_button_name"));
         var limitButton = new ButtonBuilder()
             .WithCustomId("limit_button:" + channel.Id)
             .WithStyle(ButtonStyle.Primary)
             .WithEmote(new Emoji("💺"))
-            .WithLabel(locale.Get("voicepanel:limit_button_name"));
+            .WithLabel(locale.Get("panel:limit_button_name"));
         var localeButton = new ButtonBuilder()
             .WithCustomId("locale_button:" + channel.Id)
             .WithStyle(ButtonStyle.Primary)
             .WithEmote(new Emoji("🌎"))
-            .WithLabel(locale.Get("voicepanel:locale_button_name"));
+            .WithLabel(locale.Get("panel:locale_button_name"));
 
         var kickButton = new ButtonBuilder()
             .WithCustomId("kick_button:" + channel.Id)
             .WithStyle(ButtonStyle.Danger)
             .WithEmote(new Emoji("🍃"))
-            .WithLabel("Kick");
+            .WithLabel(locale.Get("panel:kick_button_name"));
         var blockButton = new ButtonBuilder()
             .WithCustomId("block_button:" + channel.Id)
             .WithStyle(ButtonStyle.Danger)
             .WithEmote(new Emoji("🔨"))
-            .WithLabel("Block");
+            .WithLabel(locale.Get("panel:block_button_name"));
         var unblockButton = new ButtonBuilder()
             .WithCustomId("unblock_button:" + channel.Id)
             .WithStyle(ButtonStyle.Danger)
             .WithEmote(new Emoji("🙏"))
-            .WithLabel("Unblock");
+            .WithLabel(locale.Get("panel:unblock_button_name"));
         var transferButton = new ButtonBuilder()
             .WithCustomId("transfer_button:" + channel.Id)
             .WithStyle(ButtonStyle.Success)
             .WithEmote(new Emoji("🥏"))
-            .WithLabel("Transfer");
+            .WithLabel(locale.Get("panel:transfer_button_name"));
 
         // Create components panel
         var builder = new ComponentBuilderV2()
             .WithContainer(new ContainerBuilder()
                 .WithSection(new SectionBuilder()
                     .WithAccessory(new ThumbnailBuilder(new UnfurledMediaItemProperties(user.GetGuildAvatarUrl() ?? user.GetAvatarUrl())))
-                    .WithTextDisplay($"## {locale.Get("voicepanel:panel_title")}\n" +
-                                     $"**{locale.Get("voicepanel:owner_field")}:** {user.Mention}\n" +
-                                     $"**{locale.Get("voicepanel:locale_field")}:** {locale.Culture.DisplayName}\n" +
-                                     $"### {locale.Get("voicepanel:commands_field")}\n" +
+                    .WithTextDisplay($"## {locale.Get("panel:title")}\n" +
+                                     $"**{locale.Get("panel:owner_field")}:** {user.Mention}\n" +
+                                     $"**{locale.Get("panel:locale_field")}:** {locale.Culture.DisplayName}\n" +
+                                     $"### {locale.Get("panel:commands_field")}\n" +
                             $"{string.Join(" ", voiceCmds?.Options.Select(x => $"</{voiceCmds.Name} {x.Name}:{voiceCmds.Id}>")) ?? "*none*"}"))
                 .WithSeparator()
                 .WithActionRow(new ActionRowBuilder()
@@ -247,9 +247,9 @@ public class ChannelManager(
                     .WithButton(limitButton)
                     .WithButton(localeButton))
                 .WithActionRow(new ActionRowBuilder()
-                    .WithButton(kickButton)
-                    .WithButton(blockButton)
-                    .WithButton(unblockButton)
+                    //.WithButton(kickButton)
+                    //.WithButton(blockButton)
+                    //.WithButton(unblockButton)
                     .WithButton(transferButton))
             );
         
