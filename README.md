@@ -4,3 +4,8 @@
 
 # Schnauzer
 A discord bot for managing the automatic creation and deletion of voice channels in a server.
+
+# Localizations
+Schnauzer uses community maintained localizations via [Crowdin](https://crowdin.com/project/schnauzer)
+
+[![localization chart](https://badges.awesome-crowdin.com/translation-16657507-792902.png)](https://crowdin.com/project/schnauzer)

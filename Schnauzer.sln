@@ -5,11 +5,22 @@ VisualStudioVersion = 17.12.35707.178
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Schnauzer", "src\Schnauzer\Schnauzer.csproj", "{B4E3A3E4-FDEC-4649-81DD-7FA1D20692C0}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Schnauzer.Core", "src\Schnauzer.Core\Schnauzer.Core.csproj", "{DC5565B5-EE2D-49AA-AF48-ECE7A2B21821}"
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "workflows", "workflows", "{C345ABE9-EFEC-4C19-82B4-C6DE32BBDD56}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{F1B58F0D-7DCF-4C87-A74B-467C7CFCB159}"
 	ProjectSection(SolutionItems) = preProject
-		.github\workflows\push_container.yml = .github\workflows\push_container.yml
+		.gitignore = .gitignore
+		LICENSE = LICENSE
+		README.md = README.md
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".github", ".github", "{05A7D321-1F01-4CF4-BDEE-094C5639B9F5}"
+	ProjectSection(SolutionItems) = preProject
+		.github\workflows\ghcr.yml = .github\workflows\ghcr.yml
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "docker", "docker", "{D030CA3B-B187-45F0-B2EE-707ED8922A95}"
+	ProjectSection(SolutionItems) = preProject
+		.dockerignore = .dockerignore
+		Dockerfile = Dockerfile
 	EndProjectSection
 EndProject
 Global
@@ -22,10 +33,6 @@ Global
 		{B4E3A3E4-FDEC-4649-81DD-7FA1D20692C0}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B4E3A3E4-FDEC-4649-81DD-7FA1D20692C0}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B4E3A3E4-FDEC-4649-81DD-7FA1D20692C0}.Release|Any CPU.Build.0 = Release|Any CPU
-		{DC5565B5-EE2D-49AA-AF48-ECE7A2B21821}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{DC5565B5-EE2D-49AA-AF48-ECE7A2B21821}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{DC5565B5-EE2D-49AA-AF48-ECE7A2B21821}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{DC5565B5-EE2D-49AA-AF48-ECE7A2B21821}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
