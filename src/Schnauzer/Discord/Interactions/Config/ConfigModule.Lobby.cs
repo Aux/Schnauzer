@@ -15,15 +15,23 @@ public partial class ConfigModule
         // Can't set a dynamic channel as create
         if (await cache.ExistsAsync(channel.Id))
         {
-            await RespondAsync(_locale.Get("config:set_dynamic_error"), ephemeral: true);
+            await RespondAsync(_locale.Get("config:lobby:set_dynamic_error"), ephemeral: true);
             return;
         }
 
         var config = await configs.GetAsync(Context.Guild.Id);
+
+        // Can't set the already set create channel
+        if (config.CreateChannelId == channel.Id)
+        {
+            await RespondAsync(_locale.Get("config:lobby:set_dupe_error", channel.Mention), ephemeral: true);
+            return;
+        }
+
         config.CreateChannelId = channel.Id;
         await configs.ModifyAsync(config);
 
-        await RespondAsync(_locale.Get("config:set_dynamic_success", channel.Mention), ephemeral: true);
+        await RespondAsync(_locale.Get("config:lobby:set_create_success", channel.Mention), ephemeral: true);
     }
 
     [SlashCommand("default-lobby-size", "Set the default user limit when a new dynamic channel is created")]
@@ -36,7 +44,7 @@ public partial class ConfigModule
         config.DefaultLobbySize = size > 0 ? size : null;
         await configs.ModifyAsync(config);
 
-        await RespondAsync(_locale.Get("config:set_default_lobby_size_success", 
+        await RespondAsync(_locale.Get("config:lobby:set_default_size_success", 
             config.DefaultLobbySize?.ToString() ?? "∞"), ephemeral: true);
     }
 
@@ -50,7 +58,7 @@ public partial class ConfigModule
         config.MaxLobbySize = size > 0 ? size : null;
         await configs.ModifyAsync(config);
 
-        await RespondAsync(_locale.Get("config:set_max_lobby_size_success", 
+        await RespondAsync(_locale.Get("config:lobby:set_max_size_success", 
             config.MaxLobbySize?.ToString() ?? "∞"), ephemeral: true);
     }
 
@@ -64,7 +72,7 @@ public partial class ConfigModule
         config.MaxLobbyCount = count > 0 ? count : null;
         await configs.ModifyAsync(config);
 
-        await RespondAsync(_locale.Get("config:set_max_lobby_count_success", 
+        await RespondAsync(_locale.Get("config:lobby:set_max_count_success", 
             config.MaxLobbyCount?.ToString() ?? "∞"), ephemeral: true);
     }
 
@@ -104,9 +112,9 @@ public partial class ConfigModule
         await configs.ModifyAsync(config);
 
         if (config.IsAutoModEnabled ?? true)
-            await RespondAsync(_locale.Get("config:toggle_deny_deafened_ownership"), ephemeral: true);
+            await RespondAsync(_locale.Get("config:lobby:toggle_deny_deafened"), ephemeral: true);
         else
-            await RespondAsync(_locale.Get("config:toggle_allow_deafened_ownership"), ephemeral: true);
+            await RespondAsync(_locale.Get("config:lobby:toggle_allow_deafened"), ephemeral: true);
     }
 
     [SlashCommand("muted-toggle", "Enable or disable allowing server muted users to own channels")]
@@ -120,9 +128,9 @@ public partial class ConfigModule
         await configs.ModifyAsync(config);
 
         if (config.IsAutoModEnabled ?? true)
-            await RespondAsync(_locale.Get("config:toggle_deny_muted_ownership"), ephemeral: true);
+            await RespondAsync(_locale.Get("config:lobby:toggle_deny_muted"), ephemeral: true);
         else
-            await RespondAsync(_locale.Get("config:toggle_allow_muted_ownership"), ephemeral: true);
+            await RespondAsync(_locale.Get("config:lobby:toggle_allow_muted"), ephemeral: true);
     }
 
     [SlashCommand("add-ownership-role", "Add a role for users that are allowed to own a dynamic channel")]
@@ -139,7 +147,7 @@ public partial class ConfigModule
 
         await configs.ModifyAsync(config);
 
-        await RespondAsync(_locale.Get("config:add_ownership_roles_success", role.Mention, 
+        await RespondAsync(_locale.Get("config:lobby:add_owner_roles_success", role.Mention, 
             string.Join(" ", config.CanOwnRoleIds.Select(MentionUtils.MentionRole))), 
             ephemeral: true, allowedMentions: AllowedMentions.None);
     }
@@ -151,14 +159,14 @@ public partial class ConfigModule
 
         if (config.CanOwnRoleIds is null || !config.CanOwnRoleIds.Remove(role.Id))
         {
-            await RespondAsync(_locale.Get("config:remove_ownership_roles_error", role.Mention),
+            await RespondAsync(_locale.Get("config:remove_owner_roles_error", role.Mention),
                 ephemeral: true, allowedMentions: AllowedMentions.None);
             return;
         } 
 
         await configs.ModifyAsync(config);
 
-        await RespondAsync(_locale.Get("config:remove_ownership_roles_success", role.Mention,
+        await RespondAsync(_locale.Get("config:remove_owner_roles_success", role.Mention,
             string.Join(" ", config.CanOwnRoleIds.Select(MentionUtils.MentionRole))),
             ephemeral: true, allowedMentions: AllowedMentions.None);
     }

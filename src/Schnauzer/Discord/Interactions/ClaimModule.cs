@@ -35,8 +35,7 @@ public class ClaimModule(
 
     private async Task ClaimAsync(IVoiceChannel voice)
     {
-        if (Context.User is not IGuildUser user)
-            return;
+        var user = Context.User as IGuildUser;
 
         // Must be in a channel to claim it
         if (user.VoiceChannel?.Id != voice.Id)
@@ -107,11 +106,11 @@ public class ClaimModule(
 
         // Remove previous owner and add new owner permissions
         await voice.RemovePermissionOverwriteAsync(previousOwner,
-            new RequestOptions { AuditLogReason = _locale.Get("claim:log_transfer_to", user.Username, user.Id) });
+            new RequestOptions { AuditLogReason = _locale.Get("log:transfer_to", user.Username, user.Id) });
         await voice.AddPermissionOverwriteAsync(user, new OverwritePermissions(
             moveMembers: PermValue.Allow, muteMembers: PermValue.Allow, deafenMembers: PermValue.Allow,
             prioritySpeaker: PermValue.Allow, useVoiceActivation: PermValue.Allow),
-            new RequestOptions { AuditLogReason = _locale.Get("claim:log_transfer_from", previousOwner.Username, previousOwner.Id) });
+            new RequestOptions { AuditLogReason = _locale.Get("log:transfer_from", previousOwner.Username, previousOwner.Id) });
 
         // Save changes to the cache and database
         cache.Remove(previousOwner.Id);

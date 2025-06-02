@@ -23,30 +23,33 @@ public partial class ConfigModule(
     public async Task ShowAsync()
     {
         var config = await configs.GetAsync(Context.Guild.Id);
+        string noValue = _locale.Get("no_value");
+        string enabled = _locale.Get("enabled");
+        string disabled = _locale.Get("disabled");
 
         string canOwnRoleValues = config.CanOwnRoleIds is not null && config.CanOwnRoleIds?.Count > 0
             ? string.Join(',', config.CanOwnRoleIds) 
-            : "*none set*";
+            : noValue;
         string automodRuleValues = config.AutomodRuleIds is not null && config.AutomodRuleIds?.Count > 0
             ? string.Join(',', config.AutomodRuleIds)
-            : "*none set*";
+            : noValue;
         string gracePeriodValue = $"{config.AbandonedGracePeriod?.TotalMinutes ?? GracePeriodService.DefaultDuration.TotalMinutes} minute(s)";
 
         string configDisplay = $"" +
-            $"**{nameof(config.CreateChannelId)}**: {config.CreateChannelId?.ToString() ?? "*none set*"}\n" +
+            $"**{nameof(config.CreateChannelId)}**: {config.CreateChannelId?.ToString() ?? noValue}\n" +
             $"**{nameof(config.CanOwnRoleIds)}**: {canOwnRoleValues}\n" +
-            $"**{nameof(config.DenyDeafenedOwnership)}**: {config.DenyDeafenedOwnership?.ToString() ?? "True"}\n" +
-            $"**{nameof(config.DenyMutedOwnership)}**: {config.DenyMutedOwnership?.ToString() ?? "True"}\n" +
+            $"**{nameof(config.DenyDeafenedOwnership)}**: {(config.DenyDeafenedOwnership != false ? enabled : disabled)}\n" +
+            $"**{nameof(config.DenyMutedOwnership)}**: {(config.DenyMutedOwnership != false ? enabled : disabled)}\n" +
             $"**{nameof(config.DefaultLobbySize)}**: {config.DefaultLobbySize?.ToString() ?? "4"}\n" +
             $"**{nameof(config.MaxLobbySize)}**: {config.MaxLobbySize?.ToString() ?? "∞"}\n" +
             $"**{nameof(config.MaxLobbyCount)}**: {config.MaxLobbyCount?.ToString() ?? "∞"}\n" +
             $"**{nameof(config.AbandonedGracePeriod)}**: {gracePeriodValue}\n" +
-            $"**{nameof(config.IsAutoModEnabled)}**: {config.IsAutoModEnabled?.ToString() ?? "False"}\n" +
-            $"**{nameof(config.AutoModLogChannelId)}**: {config.AutoModLogChannelId?.ToString() ?? "*none set*"}\n" +
+            $"**{nameof(config.IsAutoModEnabled)}**: {(config.IsAutoModEnabled != false ? enabled : disabled)}\n" +
+            $"**{nameof(config.AutoModLogChannelId)}**: {config.AutoModLogChannelId?.ToString() ?? noValue}\n" +
             $"**{nameof(config.AutomodRuleIds)}**: {automodRuleValues}\n";
 
         var embed = new EmbedBuilder()
-            .WithTitle("Current Configuration")
+            .WithTitle(_locale.Get("config:show:embed_title"))
             .WithDescription(configDisplay);
 
         await RespondAsync(embeds: [embed.Build()], ephemeral: true);
