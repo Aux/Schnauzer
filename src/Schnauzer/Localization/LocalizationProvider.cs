@@ -6,7 +6,7 @@ namespace Schnauzer;
 
 public class LocalizationProvider
 {
-    private const string LocaleFolder = @".\locales";
+    private static readonly string LocaleFolder = Path.Combine(AppContext.BaseDirectory, "locales");
 
     private readonly ILogger _logger;
 
