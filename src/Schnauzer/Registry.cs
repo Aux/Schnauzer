@@ -28,7 +28,7 @@ public static class Registry
                 return new InteractionService(discord, new()
                 {
                     LogLevel = LogSeverity.Verbose,
-                    //LocalizationManager = new JsonLocalizationManager("locales", "interactions")
+                    LocalizationManager = new JsonLocalizationManager("locales", "interactions.*.json")
                 });
             });
         });
