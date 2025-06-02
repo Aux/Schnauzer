@@ -14,6 +14,7 @@ public struct StringTime(TimeSpan Value)
     {
         // Assuming 2y1w30d24h60m60s
 
+        time = default;
         var result = TimeSpan.Zero;
         string numpart = "";
         foreach (var c in value)
