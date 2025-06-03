@@ -1,17 +1,17 @@
 {
-  "id": "ROM",
+  "id": "ro-ROM",
   "name": "Română",
   "entries": {
-    "no_value": "*Nimic setat*",
+    "no_value": "*/Nimic setat\\*",
     "enabled": "activat",
     "disabled": "dezactivat",
     "log": {
       "delete_empty_channel": "Canalu de voce dinamic este gol",
       "create_new_channel": "Creat canalu dinamic pentru @{0} ({1})",
       "other_server_channel": "Această persoană deja are un canal dinamic în alt server {0}",
-      "deny_deafened_ownership": "Această persoană este surzit din server și nu are voie să facă un canal",
-      "deny_muted_ownership": "Această persoană este pus pe mut și nu are voie să facă un canal",
-      "no_owner_roles": "Motivul de logare a fost dat de jurnal când o persuană dela canalu de creare pentru că nu a aceptat rolu de proprietar",
+      "deny_deafened_ownership": "Această persoană este surzit din server și nu are voie să facă un canal.",
+      "deny_muted_ownership": "Această persoană este pus pe mut și nu are voie să facă un canal.",
+      "no_owner_roles": "Motivul de logare a fost dat de jurnal când o persoana dela canalu de creare pentru că nu a acceptat rolu de proprietar.",
       "updated_channel": "Actualizat de @{0} ({1})",
       "voice_kick": "Dat afară de @{0} ({1})\nMotivu: {2}",
       "voice_block": "Blocat de @{0} ({1})\nMotivu: {2}",
@@ -24,9 +24,9 @@
       "transfer_from": "Transfer de proprietate de la @{0} ({1})"
     },
     "errors": {
-      "not_guilduser": "Comanda asta poate sa fie folosit doar din un ghilde",
+      "not_guilduser": "Comanda asta poate sa fie folosit doar din un ghilde.",
       "not_in_voice": "Trebuie să fiți într-un canal de voce pentru a folosi această comandă.",
-      "not_owner": "Comanda asta poate fi folosit doar de proprietarul canalului"
+      "not_owner": "Comanda asta poate fi folosit doar de proprietarul canalului."
     },
     "graceperiod": {
       "claim_button_name": "Revendică proprietate",
@@ -34,13 +34,13 @@
     },
     "about": {
       "recent_changes": "Schimbări recente",
-      "latency": "latență",
+      "latency": "Latență",
       "uptime": "Timp de funcționare"
     },
     "claim": {
-      "not_in_channel_error": "Tu nu poți sa revendici un canal care tu nu ești în",
-      "server_deafened_error": "Tu nu poți sa revendici un canal dacă ești surzit pe server",
-      "server_muted_error": "Tu nu poți sa revendici un canal dacă ești pus pe mut pe server",
+      "not_in_channel_error": "Tu nu poți sa revendici un canal care tu nu ești în.",
+      "server_deafened_error": "Tu nu poți sa revendici un canal dacă ești surzit pe server.",
+      "server_muted_error": "Tu nu poți sa revendici un canal dacă ești pus pe mut pe server.",
       "no_owner_role_error": "Nu poți revendica un canal fără cel puțin un rol de proprietate.",
       "already_owner_error": "Ești deja proprietarul de {0}",
       "delete_claim_msg": "Canalul nu poate fi revendicat în acest moment.",
@@ -51,18 +51,18 @@
       "automod": {
         "toggle_enabled": "Verificările AutoMod pentru numele canalelor dinamice sunt acum activate",
         "toggle_disabled": "Verificările AutoMod pentru numele canalelor dinamice sunt acum dezactivate",
-        "set_logto_disabled": "Logging AutoMod rule violations is now disabled",
-        "set_logto_success": "AutoMod rule violations will now be logged to {0}",
-        "add_rule_keyword_error": "Only keyword triggered AutoMod rules can be configured",
-        "add_rule_duplicate_error": "The rule `{0}` was not added, it is already configured",
-        "add_rule_success": "The rule `{0}` has been added",
-        "remove_rule_missing_error": "The rule `{0}` was not removed, it is not configured",
-        "remove_rule_success": "The rule `{0}` has been removed"
+        "set_logto_disabled": "Logarea de reguli de AutoMod este acum dezactivat",
+        "set_logto_success": "Reguli încălcate vor fi logat în {0}",
+        "add_rule_keyword_error": "Doar cuvintele care au for declanșate de AutoMod pot fi configurate",
+        "add_rule_duplicate_error": "Regula '{0}' nu a fost adăugată, este deja configurată",
+        "add_rule_success": "Regula '{0}' a fost adăugată",
+        "remove_rule_missing_error": "Regula '{0}' nu a fost eliminată, nu este configurată",
+        "remove_rule_success": "Regula '{0}' a fost ștearsă"
       },
       "json": {
-        "export_success": "Alright, here's the config file for {0}",
-        "import_oversize_error": "The provided file cannot be more than 1kb in size.",
-        "import_nonjson_error": "The provided file must be in a JSON format.",
+        "export_success": "Bine, aici este fișierul de configurare pentru {0}",
+        "import_oversize_error": "Fișierul furnizat nu poate avea mai mult de 1 kb în mărime.",
+        "import_nonjson_error": "Fișierul furnizat trebuie să fie în format JSON.",
         "import_empty_error": "The provided file had no contents.",
         "import_invalid_error": "An error ocurred while deserializing the provided file, is the file properly JSON formatted?",
         "import_no_changes": "No changes detected between this file and the current config.",
