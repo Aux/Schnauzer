@@ -98,30 +98,30 @@
         "success": "{0} can no longer join this voice channel"
       },
       "unblock": {
-        "self_error": "You can't unblock yourself 🙄",
-        "missing_error": "{0} isn't blocked from this channel.",
-        "success": "{0} is no longer blocked from this channel."
+        "self_error": "Nu te poți te debloca pe tine însuți 🙄",
+        "missing_error": "{0} Nu este blocat din canalu ăsta.",
+        "success": "{0} Nu mai este blocat din canalu ăsta."
       },
       "kick": {
-        "self_error": "You can't kick yourself 🙄",
-        "success": "{0} has been removed from the channel."
+        "self_error": "Nu te poți da afară pe tine însuți 🙄",
+        "success": "{0} A fost scos din canal."
       },
       "limit": {
-        "not_a_number_error": "`{0}` is not a valid number, please try again.",
-        "out_of_range_error": "`{0}` is out of the acceptable user limit range.",
-        "modal_title": "Change Voice Channel Limit",
-        "modal_input": "New Limit",
-        "success": "{0} updated the channel limit to `{1}`"
+        "not_a_number_error": "`{0}` nu este un număr valid. Te rog sa încerci din nou.",
+        "out_of_range_error": "'{0}' este din afara intervalului acceptabil de limită",
+        "modal_title": "Schimbă limita canalului de voce",
+        "modal_input": "Limită nouă",
+        "success": "{0} A actualizat limita canalului la `{1}`"
       },
       "locale": {
-        "select_placeholder": "Select a locale",
-        "no_matches_error": "No matching locales found",
-        "already_set_error": "The channel is already set to this locale",
-        "success": "The channel's locale will now default to {0}"
+        "select_placeholder": "Selectează un local",
+        "no_matches_error": "Nu se găsește nicio localizare potrivită",
+        "already_set_error": "Acest canal este deja setat local",
+        "success": "Setările locale ale canalului vor fi acum implicite la {0}"
       },
       "rename": {
-        "modal_title": "Rename Voice Channel",
-        "modal_input": "New Name",
+        "modal_title": "Redenumiți canalul de voce",
+        "modal_input": "Nume Nou",
         "blocked_term_error": "Unable to rename channel, input contained blocked terms.",
         "success": "{0} updated the channel's name to `{1}`"
       },
