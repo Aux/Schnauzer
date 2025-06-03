@@ -44,7 +44,7 @@ using var host = Host.CreateDefaultBuilder(args)
         services.AddHostedService<InteractionsHost>();
         services.AddHostedService<GuildMembershipService>();
         services.AddHostedService<VoiceStateService>();
-        services.AddHostedService<CleanupService>();
+        //services.AddHostedService<CleanupService>();
     })
     .Build();
 
