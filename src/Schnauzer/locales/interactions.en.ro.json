@@ -52,20 +52,20 @@
       "name": "import",
       "description": "Modify this server's configuration by uploading a json config file.",
       "attachment": {
-        "name": "attachment",
-        "description": "attachment"
+        "name": "atașament",
+        "description": "atașament"
       }
     },
     "create-channel": {
-      "name": "create-channel",
+      "name": "Creează-canal",
       "description": "Set the voice channel users will join to create a dynamic voice channel",
       "channel": {
-        "name": "channel",
+        "name": "canal",
         "description": "The voice channel users will join"
       }
     },
     "default-lobby-size": {
-      "name": "default-lobby-size",
+      "name": "mărime implicită-lobby-ului",
       "description": "Set the default user limit when a new dynamic channel is created",
       "size": {
         "name": "size",
@@ -73,10 +73,10 @@
       }
     },
     "max-lobby-size": {
-      "name": "max-lobby-size",
+      "name": "mărime maximă de lobby",
       "description": "Set the maximum number of users that can join a dynamic channel",
       "size": {
-        "name": "size",
+        "name": "mărime",
         "description": "The max number of users allowed to join a channel, set to 0 for unlimited."
       }
     },
@@ -185,8 +185,8 @@
     "name": "claim",
     "description": "Claim ownership of an abandoned channel.",
     "channel": {
-      "name": "channel",
-      "description": "channel"
+      "name": "canal",
+      "description": "canal"
     }
   }
 }
