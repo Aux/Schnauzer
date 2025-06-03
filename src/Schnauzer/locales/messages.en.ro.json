@@ -26,31 +26,31 @@
     "errors": {
       "not_guilduser": "Comanda asta poate sa fie folosit doar din un ghilde",
       "not_in_voice": "Trebuie să fiți într-un canal de voce pentru a folosi această comandă.",
-      "not_owner": "This command can only be used by a channel owner."
+      "not_owner": "Comanda asta poate fi folosit doar de proprietarul canalului"
     },
     "graceperiod": {
-      "claim_button_name": "Claim Ownership",
-      "claim_msg": "Looks like the channel owner, {0}, has abandoned the channel. Anyone can now click this button to claim ownership."
+      "claim_button_name": "Revendică proprietate",
+      "claim_msg": "Proprietarul fiind {0} a abandonat canalul. \nOricine poate să revendice canalul, apasă pe butonu ăsta."
     },
     "about": {
-      "recent_changes": "Recent Changes",
-      "latency": "Latency",
-      "uptime": "Uptime"
+      "recent_changes": "Schimbări recente",
+      "latency": "latență",
+      "uptime": "Timp de funcționare"
     },
     "claim": {
-      "not_in_channel_error": "You can't claim a channel you aren't currently in.",
-      "server_deafened_error": "You can't claim a channel if you are server deafened.",
-      "server_muted_error": "You can't claim a channel if you are server muted.",
-      "no_owner_role_error": "You can't claim a channel without at least one ownership role.",
-      "already_owner_error": "You're already the owner of {0}",
-      "delete_claim_msg": "Channel can not be claimed at this moment.",
-      "not_abandoned_error": "You can't claim a channel that isn't abandoned.",
-      "success": "{0} is now the owner of this channel."
+      "not_in_channel_error": "Tu nu poți sa revendici un canal care tu nu ești în",
+      "server_deafened_error": "Tu nu poți sa revendici un canal dacă ești surzit pe server",
+      "server_muted_error": "Tu nu poți sa revendici un canal dacă ești pus pe mut pe server",
+      "no_owner_role_error": "Nu poți revendica un canal fără cel puțin un rol de proprietate.",
+      "already_owner_error": "Ești deja proprietarul de {0}",
+      "delete_claim_msg": "Canalul nu poate fi revendicat în acest moment.",
+      "not_abandoned_error": "Nu poți revendica un canal care nu este abandonat.",
+      "success": "{0} este acum proprietarul acestui canal."
     },
     "config": {
       "automod": {
-        "toggle_enabled": "AutoMod checks for dynamic channel names is now enabled",
-        "toggle_disabled": "AutoMod checks for dynamic channel names is now disabled",
+        "toggle_enabled": "Verificările AutoMod pentru numele canalelor dinamice sunt acum activate",
+        "toggle_disabled": "Verificările AutoMod pentru numele canalelor dinamice sunt acum dezactivate",
         "set_logto_disabled": "Logging AutoMod rule violations is now disabled",
         "set_logto_success": "AutoMod rule violations will now be logged to {0}",
         "add_rule_keyword_error": "Only keyword triggered AutoMod rules can be configured",
