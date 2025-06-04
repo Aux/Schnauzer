@@ -63,15 +63,15 @@
         "export_success": "Bine, aici este fișierul de configurare pentru {0}",
         "import_oversize_error": "Fișierul furnizat nu poate avea mai mult de 1 kb în mărime.",
         "import_nonjson_error": "Fișierul furnizat trebuie să fie în format JSON.",
-        "import_empty_error": "The provided file had no contents.",
-        "import_invalid_error": "An error ocurred while deserializing the provided file, is the file properly JSON formatted?",
-        "import_no_changes": "No changes detected between this file and the current config.",
-        "import_success": "Changes saved:\n{0}"
+        "import_empty_error": "Fișierul dat nu conține nimic",
+        "import_invalid_error": "A apărut o eroare în timpul deserializării fișierului dat, este fișierul formatat corect JSON?",
+        "import_no_changes": "Nicio modificare detectată între acest fișier și configurația curentă.",
+        "import_success": "Modificări salvate:\n{0}"
       },
       "lobby": {
-        "set_dynamic_error": "You can't set a dynamic channel as the Create Channel.",
-        "set_dupe_error": "{0} is already set as the current Create Channel.",
-        "set_create_success": "{0} has been set as the Create Channel.",
+        "set_dynamic_error": "Nu poți seta canal dinamic canalu de creare",
+        "set_dupe_error": "{0} Este deja setat ca canalu ăsta ",
+        "set_create_success": "{0} A fost setat ca Canalul de Creare.",
         "set_default_size_success": "The default user limit of dynamic channels is now `{0}`",
         "set_max_size_success": "The max user limit of dynamic channels is now `{0}`",
         "set_max_count_success": "The max number of dynamic channels is now `{0}`",
@@ -92,10 +92,10 @@
     },
     "voice": {
       "block": {
-        "self_error": "You can't block yourself 🙄",
-        "dupe_error": "{0} is already blocked from this channel.",
-        "mod_error": "You can't block server moderators.",
-        "success": "{0} can no longer join this voice channel"
+        "self_error": "Nu te poți bloca pe tine însuți 🙄",
+        "dupe_error": "{0} Este deja blocat din canalu ăsta.",
+        "mod_error": "Nu poți bloca moderatorii serverului.",
+        "success": "{0} Nu mai poate intra în canalu ăsta de voce"
       },
       "unblock": {
         "self_error": "Nu te poți te debloca pe tine însuți 🙄",
@@ -122,14 +122,14 @@
       "rename": {
         "modal_title": "Redenumiți canalul de voce",
         "modal_input": "Nume Nou",
-        "blocked_term_error": "Unable to rename channel, input contained blocked terms.",
-        "success": "{0} updated the channel's name to `{1}`"
+        "blocked_term_error": "Nu se poate redenumi canalul, intrarea conținea termeni blocați.",
+        "success": "{0} A actualizat numele canalului la `{1}`"
       },
       "transfer": {
         "not_in_voice_error": "You must be in the voice channel you own to use this command.",
         "target_not_in_voice_error": "The target user must be in the voice channel to transfer ownership.",
         "confirm_text": "You are about to transfer ownership of the channel to {0}. Are you sure?",
-        "confirm_label": "Confirm",
+        "confirm_label": "Confirmă",
         "select_placeholder": "Select a user",
         "server_deafened_error": "The target user cannot be server deafened.",
         "server_muted_error": "The target user cannot be server muted.",
@@ -139,17 +139,17 @@
       }
     },
     "panel": {
-      "rename_button_name": "Rename",
-      "limit_button_name": "Limit",
+      "rename_button_name": "Redenumește",
+      "limit_button_name": "Limita",
       "locale_button_name": "Locale",
-      "kick_button_name": "Kick",
-      "block_button_name": "Block",
-      "unblock_button_name": "Unblock",
-      "transfer_button_name": "Transfer",
-      "title": "Voice Channel Controls",
-      "owner_field": "Owner",
+      "kick_button_name": "Exclude",
+      "block_button_name": "Blochează",
+      "unblock_button_name": "Deblochează",
+      "transfer_button_name": "Transferă",
+      "title": "Controale de canal de voce",
+      "owner_field": "Proprietarul",
       "locale_field": "Locale",
-      "commands_field": "Commands"
+      "commands_field": "Comenzi"
     }
   }
 }
