@@ -97,7 +97,7 @@
       }
     },
     "deafened-toggle": {
-      "name": "Comutator de surzire",
+      "name": "comutator de surzire",
       "description": "Enable or disable allowing server deafened users to own channels",
       "toggle": {
         "name": "comutator",
@@ -111,7 +111,7 @@
       }
     },
     "muted-toggle": {
-      "name": "Comutator de mut",
+      "name": "comutator de mut",
       "description": "Enable or disable allowing server muted users to own channels",
       "toggle": {
         "name": "comutator",
@@ -164,7 +164,7 @@
       "name": "redenumește",
       "description": "Rename a voice channel you own.",
       "new-name": {
-        "name": "Nume nou",
+        "name": "nume nou",
         "description": "The new name of your channel, must be between 1 and 50 characters long."
       }
     },
