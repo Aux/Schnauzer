@@ -61,16 +61,16 @@
       },
       "json": {
         "export_success": "Bine, aici este fișierul de configurare pentru {0}",
-        "import_oversize_error": "Fișierul furnizat nu poate avea mai mult de 1 kb în mărime.",
+        "import_oversize_error": "Fișierul furnizat nu poate avea mai mult de 1kb în mărime.",
         "import_nonjson_error": "Fișierul furnizat trebuie să fie în format JSON.",
-        "import_empty_error": "Fișierul dat nu conține nimic",
+        "import_empty_error": "Fișierul dat nu conține nimic.",
         "import_invalid_error": "A apărut o eroare în timpul deserializării fișierului dat, este fișierul formatat corect JSON?",
         "import_no_changes": "Nicio modificare detectată între acest fișier și configurația curentă.",
         "import_success": "Modificări salvate:\n{0}"
       },
       "lobby": {
-        "set_dynamic_error": "Nu poți seta canal dinamic canalu de creare",
-        "set_dupe_error": "{0} Este deja setat ca canalu ăsta ",
+        "set_dynamic_error": "Nu poți seta canal dinamic canalu de creare.",
+        "set_dupe_error": "{0} Este deja setat canalu ăsta ",
         "set_create_success": "{0} A fost setat ca Canalul de Creare.",
         "set_default_size_success": "The default user limit of dynamic channels is now `{0}`",
         "set_max_size_success": "The max user limit of dynamic channels is now `{0}`",
@@ -108,7 +108,7 @@
       },
       "limit": {
         "not_a_number_error": "`{0}` nu este un număr valid. Te rog sa încerci din nou.",
-        "out_of_range_error": "'{0}' este din afara intervalului acceptabil de limită",
+        "out_of_range_error": "'{0}' este din afara intervalului acceptabil de limită.",
         "modal_title": "Schimbă limita canalului de voce",
         "modal_input": "Limită nouă",
         "success": "{0} A actualizat limita canalului la `{1}`"
