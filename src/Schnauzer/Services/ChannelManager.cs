@@ -59,8 +59,22 @@ public class ChannelManager(
                     new RequestOptions() { AuditLogReason = locale.Get("log:no_owner_roles") });
         }
 
-        // Get the user's existing dynamic channel or create one
+        // Get the user's dynamic channel if it exists
         var channel = await channels.GetByOwnerAsync(user.Id);
+        if (channel is not null)
+        {
+            var voice = user.Guild.GetVoiceChannel(channel.Id);
+
+            // If we can't find the voice channel it's probably a
+            // forgotten channel, remove it from the cache and db
+            if (voice is null)  
+            {
+                await channels.DeleteAsync(channel.Id);
+                channel = null;
+            }
+        } 
+
+        // Create a new channel for the user
         if (channel is null)
         {
             // Check if the user's name contains automod blocked terms

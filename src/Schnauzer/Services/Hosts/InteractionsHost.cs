@@ -21,7 +21,6 @@ public class InteractionsHost(
         interactions.Log += msg => LogHelper.OnLogAsync(logger, msg);
         discord.Ready += async () =>
         {
-            //await interactions.RegisterCommandsGloballyAsync(true);
             await discord.SetCustomStatusAsync("🎙️ Serving up dynamic voice channels");
         };
         discord.GuildAvailable += guild => interactions.RegisterCommandsToGuildAsync(guild.Id, true);
