@@ -1,0 +1,155 @@
+{
+  "id": "ro-ROM",
+  "name": "Română",
+  "entries": {
+    "no_value": "*/Nimic setat\\*",
+    "enabled": "activat",
+    "disabled": "dezactivat",
+    "log": {
+      "delete_empty_channel": "Canalu de voce dinamic este gol",
+      "create_new_channel": "Creat canalu dinamic pentru @{0} ({1})",
+      "other_server_channel": "Această persoană deja are un canal dinamic în alt server {0}",
+      "deny_deafened_ownership": "Această persoană este surzit din server și nu are voie să facă un canal.",
+      "deny_muted_ownership": "Această persoană este pus pe mut și nu are voie să facă un canal.",
+      "no_owner_roles": "Motivul de logare a fost dat de jurnal când o persoana dela canalu de creare pentru că nu a acceptat rolu de proprietar.",
+      "updated_channel": "Actualizat de @{0} ({1})",
+      "voice_kick": "Dat afară de @{0} ({1})\nMotivu: {2}",
+      "voice_block": "Blocat de @{0} ({1})\nMotivu: {2}",
+      "voice_unblock": "Deblocat de @{0} ({1})\nMotivu: {2}",
+      "voice_transfer": "Transfer de proprietate la @{0} ({1})",
+      "blocked_channel_create": "Încercat să creeze un canal cu un termen blocat de regula {0}: `{1}`",
+      "blocked_channel_rename": "{0} a încercat să renumească un canal cu un termen blocat de regula {1}: `{2}`",
+      "forgotten_channel": "Curățare de canal dinamic uitat",
+      "transfer_to": "Transfer de proprietate la @{0} ({1})",
+      "transfer_from": "Transfer de proprietate de la @{0} ({1})"
+    },
+    "errors": {
+      "not_guilduser": "Comanda asta poate sa fie folosit doar din un ghilde.",
+      "not_in_voice": "Trebuie să fiți într-un canal de voce pentru a folosi această comandă.",
+      "not_owner": "Comanda asta poate fi folosit doar de proprietarul canalului."
+    },
+    "graceperiod": {
+      "claim_button_name": "Revendică proprietate",
+      "claim_msg": "Proprietarul fiind {0} a abandonat canalul. \nOricine poate să revendice canalul, apasă pe butonu ăsta."
+    },
+    "about": {
+      "recent_changes": "Schimbări recente",
+      "latency": "Latență",
+      "uptime": "Timp de funcționare"
+    },
+    "claim": {
+      "not_in_channel_error": "Tu nu poți sa revendici un canal care tu nu ești în.",
+      "server_deafened_error": "Tu nu poți sa revendici un canal dacă ești surzit pe server.",
+      "server_muted_error": "Tu nu poți sa revendici un canal dacă ești pus pe mut pe server.",
+      "no_owner_role_error": "Nu poți revendica un canal fără cel puțin un rol de proprietate.",
+      "already_owner_error": "Ești deja proprietarul de {0}",
+      "delete_claim_msg": "Canalul nu poate fi revendicat în acest moment.",
+      "not_abandoned_error": "Nu poți revendica un canal care nu este abandonat.",
+      "success": "{0} este acum proprietarul acestui canal."
+    },
+    "config": {
+      "automod": {
+        "toggle_enabled": "Verificările AutoMod pentru numele canalelor dinamice sunt acum activate",
+        "toggle_disabled": "Verificările AutoMod pentru numele canalelor dinamice sunt acum dezactivate",
+        "set_logto_disabled": "Logarea de reguli de AutoMod este acum dezactivat",
+        "set_logto_success": "Reguli încălcate vor fi logat în {0}",
+        "add_rule_keyword_error": "Doar cuvintele care au for declanșate de AutoMod pot fi configurate",
+        "add_rule_duplicate_error": "Regula '{0}' nu a fost adăugată, este deja configurată",
+        "add_rule_success": "Regula '{0}' a fost adăugată",
+        "remove_rule_missing_error": "Regula '{0}' nu a fost eliminată, nu este configurată",
+        "remove_rule_success": "Regula '{0}' a fost ștearsă"
+      },
+      "json": {
+        "export_success": "Bine, aici este fișierul de configurare pentru {0}",
+        "import_oversize_error": "Fișierul furnizat nu poate avea mai mult de 1kb în mărime.",
+        "import_nonjson_error": "Fișierul furnizat trebuie să fie în format JSON.",
+        "import_empty_error": "Fișierul dat nu conține nimic.",
+        "import_invalid_error": "A apărut o eroare în timpul deserializării fișierului dat, este fișierul formatat corect JSON?",
+        "import_no_changes": "Nicio modificare detectată între acest fișier și configurația curentă.",
+        "import_success": "Modificări salvate:\n{0}"
+      },
+      "lobby": {
+        "set_dynamic_error": "Nu poți seta canal dinamic canalu de creare.",
+        "set_dupe_error": "{0} Este deja setat canalu ăsta ",
+        "set_create_success": "{0} A fost setat ca Canalul de Creare.",
+        "set_default_size_success": "The default user limit of dynamic channels is now `{0}`",
+        "set_max_size_success": "The max user limit of dynamic channels is now `{0}`",
+        "set_max_count_success": "The max number of dynamic channels is now `{0}`",
+        "grace_period_undertime": "The specified grace period duration cannot be less than 5 seconds.",
+        "grace_period_overtime": "The specified grace period duration cannot be more than 24 hours.",
+        "set_grace_period_success": "The ownership abandonment grace period is now `{0} minute(s)`",
+        "toggle_deny_deafened": "Deafened users are no longer allowed to own dynamic voice channels",
+        "toggle_allow_deafened": "Deafened users are now able to own dynamic voice channels",
+        "toggle_deny_muted": "Muted users are no longer allowed to own dynamic voice channels",
+        "toggle_allow_muted": "Muted users are now able to own dynamic voice channels",
+        "add_owner_roles_success": "Added {0}, these roles are now allowed to claim ownership of a dynamic channel: {1}",
+        "remove_owner_roles_error": "The role {0} was not a configured ownership role.",
+        "remove_owner_roles_success": "Removed {0}, these roles are now allowed to claim ownership of a dynamic channel: {1}"
+      },
+      "show": {
+        "embed_title": "Current Configuration"
+      }
+    },
+    "voice": {
+      "block": {
+        "self_error": "Nu te poți bloca pe tine însuți 🙄",
+        "dupe_error": "{0} Este deja blocat din canalu ăsta.",
+        "mod_error": "Nu poți bloca moderatorii serverului.",
+        "success": "{0} Nu mai poate intra în canalu ăsta de voce"
+      },
+      "unblock": {
+        "self_error": "Nu te poți te debloca pe tine însuți 🙄",
+        "missing_error": "{0} Nu este blocat din canalu ăsta.",
+        "success": "{0} Nu mai este blocat din canalu ăsta."
+      },
+      "kick": {
+        "self_error": "Nu te poți da afară pe tine însuți 🙄",
+        "success": "{0} A fost scos din canal."
+      },
+      "limit": {
+        "not_a_number_error": "`{0}` nu este un număr valid. Te rog sa încerci din nou.",
+        "out_of_range_error": "'{0}' este din afara intervalului acceptabil de limită.",
+        "modal_title": "Schimbă limita canalului de voce",
+        "modal_input": "Limită nouă",
+        "success": "{0} A actualizat limita canalului la `{1}`"
+      },
+      "locale": {
+        "select_placeholder": "Selectează un local",
+        "no_matches_error": "Nu se găsește nicio localizare potrivită",
+        "already_set_error": "Acest canal este deja setat local",
+        "success": "Setările locale ale canalului vor fi acum implicite la {0}"
+      },
+      "rename": {
+        "modal_title": "Redenumiți canalul de voce",
+        "modal_input": "Nume Nou",
+        "blocked_term_error": "Nu se poate redenumi canalul, intrarea conținea termeni blocați.",
+        "success": "{0} A actualizat numele canalului la `{1}`"
+      },
+      "transfer": {
+        "not_in_voice_error": "You must be in the voice channel you own to use this command.",
+        "target_not_in_voice_error": "The target user must be in the voice channel to transfer ownership.",
+        "confirm_text": "You are about to transfer ownership of the channel to {0}. Are you sure?",
+        "confirm_label": "Confirmă",
+        "select_placeholder": "Select a user",
+        "server_deafened_error": "The target user cannot be server deafened.",
+        "server_muted_error": "The target user cannot be server muted.",
+        "no_owner_role_error": "The target user does not have a role that allows ownership of a voice channel.",
+        "already_owner_error": "The target user is already the owner of a voice channel.",
+        "success": "{0} has transferred ownership of the channel to {1}"
+      }
+    },
+    "panel": {
+      "rename_button_name": "Redenumește",
+      "limit_button_name": "Limita",
+      "locale_button_name": "Locale",
+      "kick_button_name": "Exclude",
+      "block_button_name": "Blochează",
+      "unblock_button_name": "Deblochează",
+      "transfer_button_name": "Transferă",
+      "title": "Controale de canal de voce",
+      "owner_field": "Proprietarul",
+      "locale_field": "Locale",
+      "commands_field": "Comenzi"
+    }
+  }
+}

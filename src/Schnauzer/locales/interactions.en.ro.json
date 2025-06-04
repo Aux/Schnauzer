@@ -1,0 +1,192 @@
+{
+  "config": {
+    "name": "configurare",
+    "description": "A collection of admin-only configuration commands",
+    "automod-toggle": {
+      "name": "automod-toggle",
+      "description": "Enable or disable AutoMod checks in channel names",
+      "toggle": {
+        "name": "toggle",
+        "description": "Either enable or disable AutoMod checks",
+        "Enable": {
+          "name": "Enable"
+        },
+        "Disable": {
+          "name": "Disable"
+        }
+      }
+    },
+    "automod-logto": {
+      "name": "automod-logto",
+      "description": "Set the channel to log AutoMod violations to",
+      "channel": {
+        "name": "channel",
+        "description": "The channel to send messages to, omit to disable"
+      }
+    },
+    "automod-add": {
+      "name": "automod-add",
+      "description": "Add AutoMod rule",
+      "rule": {
+        "name": "rule",
+        "description": "rule"
+      }
+    },
+    "automod-remove": {
+      "name": "automod-remove",
+      "description": "Remove AutoMod rule",
+      "rule": {
+        "name": "rule",
+        "description": "rule"
+      }
+    },
+    "show": {
+      "name": "show",
+      "description": "Show this server's current configuration"
+    },
+    "export": {
+      "name": "export",
+      "description": "Export this server's config as a json file."
+    },
+    "import": {
+      "name": "import",
+      "description": "Modify this server's configuration by uploading a json config file.",
+      "attachment": {
+        "name": "atașament",
+        "description": "atașament"
+      }
+    },
+    "create-channel": {
+      "name": "Creează-canal",
+      "description": "Set the voice channel users will join to create a dynamic voice channel",
+      "channel": {
+        "name": "canal",
+        "description": "The voice channel users will join"
+      }
+    },
+    "default-lobby-size": {
+      "name": "mărime implicită-lobby-ului",
+      "description": "Set the default user limit when a new dynamic channel is created",
+      "size": {
+        "name": "size",
+        "description": "The default number of users allowed to join a channel, set to 0 for unlimited."
+      }
+    },
+    "max-lobby-size": {
+      "name": "mărime maximă de lobby",
+      "description": "Set the maximum number of users that can join a dynamic channel",
+      "size": {
+        "name": "mărime",
+        "description": "The max number of users allowed to join a channel, set to 0 for unlimited."
+      }
+    },
+    "max-lobby-count": {
+      "name": "max-lobby-count",
+      "description": "Set the maximum number of dynamic channels that can exist in your server",
+      "count": {
+        "name": "count",
+        "description": "The max number of dynamic channels, set to 0 for unlimited."
+      }
+    },
+    "set-grace-period": {
+      "name": "- perioadă de grație",
+      "description": "Set the amount of time to wait before considering a voice channel abandoned.",
+      "duration": {
+        "name": "durație",
+        "description": "durație"
+      }
+    },
+    "deafened-toggle": {
+      "name": "comutator de surzire",
+      "description": "Enable or disable allowing server deafened users to own channels",
+      "toggle": {
+        "name": "comutator",
+        "description": "Ori activați sau dezactivați verificările de AutoMod",
+        "Enable": {
+          "name": "Activează"
+        },
+        "Disable": {
+          "name": "Dezactivează"
+        }
+      }
+    },
+    "muted-toggle": {
+      "name": "comutator de mut",
+      "description": "Enable or disable allowing server muted users to own channels",
+      "toggle": {
+        "name": "comutator",
+        "description": "Either allow or deny server muted ownership",
+        "Allow": {
+          "name": "Permite"
+        },
+        "Deny": {
+          "name": "Refuză"
+        }
+      }
+    },
+    "add-ownership-role": {
+      "name": "add-ownership-role",
+      "description": "Add a role for users that are allowed to own a dynamic channel",
+      "role": {
+        "name": "rol",
+        "description": "The default number of users allowed to join a channel, set to 0 for unlimited."
+      }
+    },
+    "remove-ownership-role": {
+      "name": "remove-ownership-role",
+      "description": "Remove a role for users that are allowed to own a dynamic channel",
+      "role": {
+        "name": "rol",
+        "description": "rol"
+      }
+    }
+  },
+  "voice": {
+    "name": "voice",
+    "description": "Management commands for channel owners.",
+    "limit": {
+      "name": "limită",
+      "description": "Change the user limit for a voice channel you own.",
+      "limit": {
+        "name": "limită",
+        "description": "The max number of users that can join this channel, must be between 1 and 99, set to 0 for infinite."
+      }
+    },
+    "locale": {
+      "name": "locale",
+      "description": "Set the locale for a voice channel you own",
+      "locale": {
+        "name": "locale",
+        "description": "The locale to set your voice channel responses to"
+      }
+    },
+    "rename": {
+      "name": "redenumește",
+      "description": "Rename a voice channel you own.",
+      "new-name": {
+        "name": "nume nou",
+        "description": "The new name of your channel, must be between 1 and 50 characters long."
+      }
+    },
+    "transfer": {
+      "name": "transferă",
+      "description": "Transfer ownership of a voice channel you own to another user.",
+      "user": {
+        "name": "utilizator",
+        "description": "Select a user in your voice channel to transfer ownership to"
+      }
+    }
+  },
+  "about": {
+    "name": "about",
+    "description": "Get some information about Schnauzer"
+  },
+  "claim": {
+    "name": "claim",
+    "description": "Claim ownership of an abandoned channel.",
+    "channel": {
+      "name": "canal",
+      "description": "canal"
+    }
+  }
+}
