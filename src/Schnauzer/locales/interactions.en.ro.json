@@ -1,6 +1,6 @@
 {
   "config": {
-    "name": "config",
+    "name": "configurare",
     "description": "A collection of admin-only configuration commands",
     "automod-toggle": {
       "name": "automod-toggle",
@@ -89,38 +89,38 @@
       }
     },
     "set-grace-period": {
-      "name": "set-grace-period",
+      "name": "- perioadă de grație",
       "description": "Set the amount of time to wait before considering a voice channel abandoned.",
       "duration": {
-        "name": "duration",
-        "description": "duration"
+        "name": "durație",
+        "description": "durație"
       }
     },
     "deafened-toggle": {
-      "name": "deafened-toggle",
+      "name": "Comutator de surzire",
       "description": "Enable or disable allowing server deafened users to own channels",
       "toggle": {
-        "name": "toggle",
-        "description": "Either enable or disable AutoMod checks",
+        "name": "comutator",
+        "description": "Ori activați sau dezactivați verificările de AutoMod",
         "Enable": {
-          "name": "Enable"
+          "name": "Activează"
         },
         "Disable": {
-          "name": "Disable"
+          "name": "Dezactivează"
         }
       }
     },
     "muted-toggle": {
-      "name": "muted-toggle",
+      "name": "Comutator de mut",
       "description": "Enable or disable allowing server muted users to own channels",
       "toggle": {
-        "name": "toggle",
+        "name": "comutator",
         "description": "Either allow or deny server muted ownership",
         "Allow": {
-          "name": "Allow"
+          "name": "Permite"
         },
         "Deny": {
-          "name": "Deny"
+          "name": "Refuză"
         }
       }
     },
@@ -128,7 +128,7 @@
       "name": "add-ownership-role",
       "description": "Add a role for users that are allowed to own a dynamic channel",
       "role": {
-        "name": "role",
+        "name": "rol",
         "description": "The default number of users allowed to join a channel, set to 0 for unlimited."
       }
     },
@@ -136,8 +136,8 @@
       "name": "remove-ownership-role",
       "description": "Remove a role for users that are allowed to own a dynamic channel",
       "role": {
-        "name": "role",
-        "description": "role"
+        "name": "rol",
+        "description": "rol"
       }
     }
   },
@@ -145,10 +145,10 @@
     "name": "voice",
     "description": "Management commands for channel owners.",
     "limit": {
-      "name": "limit",
+      "name": "limită",
       "description": "Change the user limit for a voice channel you own.",
       "limit": {
-        "name": "limit",
+        "name": "limită",
         "description": "The max number of users that can join this channel, must be between 1 and 99, set to 0 for infinite."
       }
     },
@@ -161,18 +161,18 @@
       }
     },
     "rename": {
-      "name": "rename",
+      "name": "redenumește",
       "description": "Rename a voice channel you own.",
       "new-name": {
-        "name": "new-name",
+        "name": "Nume nou",
         "description": "The new name of your channel, must be between 1 and 50 characters long."
       }
     },
     "transfer": {
-      "name": "transfer",
+      "name": "transferă",
       "description": "Transfer ownership of a voice channel you own to another user.",
       "user": {
-        "name": "user",
+        "name": "utilizator",
         "description": "Select a user in your voice channel to transfer ownership to"
       }
     }
