@@ -25,14 +25,21 @@ public class ChannelManager(
         if (state.VoiceChannel.Id != config.CreateChannelId)
             return;
 
+        logger.LogInformation("User {userName} ({userId}) joined create channel {createId} in guild {guildName} ({guildId})",
+            user.Username, user.Id, config.CreateChannelId, user.Guild.Name, user.Guild.Id);
+
         // Get the server's preferred language
         var locale = localizer.GetLocale(config.PreferredLocale);
+        logger.LogInformation("Got locale {cultureCode} for guild {guildName} ({guildId})", 
+            locale.Culture.TwoLetterISOLanguageName, user.Guild.Name, user.Guild.Id);
         
         // Don't allow deafened users to own a channel
         if ((config.DenyDeafenedOwnership ?? true) && state.IsDeafened)
         {
             await user.ModifyAsync(x => x.ChannelId = null,
                 new RequestOptions() { AuditLogReason = locale.Get("log:deny_deafened_ownership") });
+            logger.LogInformation("Removed user {userName} ({userId}) in guild {guildName} ({guildId}), reason: Deny deafened user ownership",
+                user.Username, user.Id, user.Guild.Name, user.Guild.Id);
             return;
         }
 
@@ -41,11 +48,10 @@ public class ChannelManager(
         {
             await user.ModifyAsync(x => x.ChannelId = null,
                 new RequestOptions() { AuditLogReason = locale.Get("log:deny_muted_ownership") });
+            logger.LogInformation("Removed user {userName} ({userId}) in guild {guildName} ({guildId}), reason: Deny muted user ownership",
+                user.Username, user.Id, user.Guild.Name, user.Guild.Id);
             return;
         }
-
-        logger.LogInformation("User {UserId} joined create channel {ChannelId} in {GuildId}", 
-            user.Id, state.VoiceChannel.Id, user.Guild.Id);
 
         // Create channel joins should be managed by permissions, but
         // just in case that doesn't happen check if the user has owner roles
@@ -55,8 +61,13 @@ public class ChannelManager(
                 .Intersect(config.CanOwnRoleIds);
 
             if (!roles.Any())
+            {
                 await user.ModifyAsync(x => x.ChannelId = null,
                     new RequestOptions() { AuditLogReason = locale.Get("log:no_owner_roles") });
+                logger.LogInformation("Removed user {userName} ({userId}) in guild {guildName} ({guildId}), reason: Does not have ownership roles",
+                    user.Username, user.Id, user.Guild.Name, user.Guild.Id);
+                return;
+            }
         }
 
         // Get the user's dynamic channel if it exists
@@ -70,9 +81,11 @@ public class ChannelManager(
             if (voice is null)  
             {
                 await channels.DeleteAsync(channel.Id);
+                logger.LogInformation("Removed an orphaned dynamic channel ({channelId}) from the db in guild {guildName} ({guildId})",
+                    channel.Id, user.Guild.Name, user.Guild.Id);
                 channel = null;
             }
-        } 
+        }
 
         // Create a new channel for the user
         if (channel is null)
@@ -85,6 +98,8 @@ public class ChannelManager(
                 {
                     await user.ModifyAsync(x => x.Channel = null,
                         new RequestOptions { AuditLogReason = locale.Get("log:blocked_channel_create", result.Rule.Name, result.Keyword) });
+                    logger.LogInformation("Removed user {userName} ({userId}) in guild {guildName} ({guildId}), reason: Blocked by automod rule {ruleName} ({ruleId})",
+                        user.Username, user.Id, user.Guild.Name, user.Guild.Id, result.Rule.Name, result.Rule.Id);
 
                     if (config.AutoModLogChannelId is not null)
                     {
@@ -166,14 +181,16 @@ public class ChannelManager(
         if (!await channels.ExistsAsync(state.VoiceChannel.Id))
             return;
 
-        logger.LogInformation("User {UserId} left dynamic channel {ChannelId} in {GuildId}",
-            user.Id, state.VoiceChannel.Id, user.Guild.Id);
+        logger.LogInformation("User {userName} ({userId}) left dynamic channel {channelName} ({channelId}) in guild {guildName} ({guildId})",
+            user.Username, user.Id, state.VoiceChannel.Name, state.VoiceChannel.Id, user.Guild.Name, user.Guild.Id);
 
         // Get the server's preferred language
         var locale = localizer.GetLocale(config.PreferredLocale);
+        logger.LogInformation("Got locale {cultureCode} for guild {guildName} ({guildId})",
+            locale.Culture.TwoLetterISOLanguageName, user.Guild.Name, user.Guild.Id);
 
         // Get channel config
-        var channel = await channels.GetByOwnerAsync(user.Id);
+        var channel = await channels.GetAsync(state.VoiceChannel.Id);
 
         // Channel is empty
         if (state.VoiceChannel.ConnectedUsers.Count == 0)
@@ -187,6 +204,9 @@ public class ChannelManager(
             });
 
             await channels.DeleteAsync(user.Id);
+            logger.LogInformation("Deleting empty dynamic channel {channelName} ({channelId}) in guild {guildName} ({guildId})",
+                state.VoiceChannel.Name, state.VoiceChannel.Id, user.Guild.Name, user.Guild.Id);
+
             return;
         }
 
@@ -194,6 +214,8 @@ public class ChannelManager(
         if (channel.OwnerId == user.Id)
         {
             gracePeriod.TryStartTimer(state.VoiceChannel, user, locale, config.AbandonedGracePeriod ?? GracePeriodService.DefaultDuration);
+            logger.LogInformation("Started grace period timer for dynamic channel {channelName} ({channelId}) in guild {guildName} ({guildId})",
+                state.VoiceChannel.Name, state.VoiceChannel.Id, user.Guild.Name, user.Guild.Id);
             return;
         }
     }
