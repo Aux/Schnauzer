@@ -1,4 +1,5 @@
-﻿using Discord.WebSocket;
+﻿using Discord;
+using Discord.WebSocket;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 
@@ -8,23 +9,39 @@ public class VoiceStateService(
     ILogger<VoiceStateService> logger,
     DiscordSocketClient discord,
     ChannelManager manager,
-    ConfigCache configs
+    ConfigCache configs,
+    ChannelCache channels
     ) : IHostedService
 {
-    public Task StartAsync(CancellationToken cancellationToken)
+    public async Task StartAsync(CancellationToken cancellationToken)
     {
         discord.UserVoiceStateUpdated += OnUserVoiceStateUpdatedAsync;
+        discord.ChannelDestroyed += OnChannelDestroyedAsync;
+        await channels.FillAsync();
 
         logger.LogInformation("Started");
-        return Task.CompletedTask;
     }
 
     public Task StopAsync(CancellationToken cancellationToken)
     {
         discord.UserVoiceStateUpdated -= OnUserVoiceStateUpdatedAsync;
+        discord.ChannelDestroyed -= OnChannelDestroyedAsync;
 
         logger.LogInformation("Stopped");
         return Task.CompletedTask;
+    }
+
+    private async Task OnChannelDestroyedAsync(SocketChannel channel)
+    {
+        if (channel.ChannelType is not ChannelType.Voice)
+            return;
+
+        var dyn = await channels.GetAsync(channel.Id);
+        if (dyn is null)
+            return;
+
+        await channels.DeleteAsync(dyn.OwnerId);
+        logger.LogInformation("Removed a manually destroyed channel ({channelId}) from cache and db", channel.Id);
     }
 
     private async Task OnUserVoiceStateUpdatedAsync(SocketUser user, SocketVoiceState before, SocketVoiceState after)
