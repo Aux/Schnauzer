@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.Caching.Memory;
+﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Logging;
 using Schnauzer.Data;
 using Schnauzer.Data.Models;
@@ -13,6 +14,17 @@ public class ChannelCache(
     IMemoryCache cache,
     SchnauzerDb db)
 {
+    /// <summary>
+    ///     Fill the cache with all channels from the database
+    /// </summary>
+    public async Task FillAsync()
+    {
+        var channels = await db.Channels.ToListAsync();
+        foreach (var channel in channels)
+            cache.CreateEntry($"channel:{channel.OwnerId}");
+        logger.LogInformation("Filled cache with {count} channels from the database", channels.Count);
+    }
+
     /// <summary>
     ///     Check if a voice channel is a dynamic channel
     /// </summary>
@@ -89,8 +101,9 @@ public class ChannelCache(
     /// </summary>
     public async Task DeleteAsync(ulong ownerId)
     {
-        var channel = Remove(ownerId);
-
+        var channel = Remove(ownerId) 
+            ?? await SchnauzerDb.GetChannelByOwnerAsync(db, ownerId);
+        
         db.Remove(channel);
         await db.SaveChangesAsync();
 
