@@ -37,6 +37,12 @@ public class SchnauzerDb(
             .WithOne(x => x.Guild)
             .HasForeignKey(x => x.GuildId)
             .HasPrincipalKey(x => x.Id);
+
+        builder.Entity<Channel>()
+            .HasAlternateKey(x => new { x.OwnerId, x.GuildId });
+        builder.Entity<Channel>()
+            .HasOne(x => x.Guild)
+            .WithMany(x => x.DynamicChannels);
     }
 
     public static readonly Func<SchnauzerDb, ulong, Task<bool>> ConfigExistsAsync =
