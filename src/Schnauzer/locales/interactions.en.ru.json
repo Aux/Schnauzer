@@ -3,7 +3,7 @@
     "name": "config",
     "description": "A collection of admin-only configuration commands",
     "automod-toggle": {
-      "name": "automod-toggle",
+      "name": "",
       "description": "Enable or disable AutoMod checks in channel names",
       "toggle": {
         "name": "toggle",
