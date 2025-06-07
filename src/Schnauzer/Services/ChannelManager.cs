@@ -1,8 +1,11 @@
 ﻿using Discord;
+using Discord.Net;
 using Discord.WebSocket;
 using Microsoft.Extensions.Logging;
 using Schnauzer.Data.Models;
 using Schnauzer.Utility;
+using System.Reflection;
+using System.Reflection.Metadata.Ecma335;
 
 namespace Schnauzer.Services;
 
@@ -80,7 +83,7 @@ public class ChannelManager(
             // forgotten channel, remove it from the cache and db
             if (voice is null)  
             {
-                await channels.DeleteAsync(channel.Id);
+                await channels.DeleteAsync(user.Id);
                 logger.LogInformation("Removed an orphaned dynamic channel ({channelId}) from the db in guild {guildName} ({guildId})",
                     channel.Id, user.Guild.Name, user.Guild.Id);
                 channel = null;
@@ -161,8 +164,20 @@ public class ChannelManager(
                 new RequestOptions() { AuditLogReason = locale.Get("log:other_server_channel", channel.GuildId) });
         }
 
-        // Move the user (owner) to the dynamic channel
-        await user.ModifyAsync(x =>  x.ChannelId = channel.Id);
+        try
+        {
+            // Move the user (owner) to the dynamic channel
+            await user.ModifyAsync(x => x.ChannelId = channel.Id);
+        } catch (HttpException ex)
+        {
+            // User left create before the process finished.
+            if (ex.DiscordCode == DiscordErrorCode.TargetUserNotInVoice)
+            {
+                logger.LogInformation("A user {userName} ({userId}) in guild {guildName} ({guildId}) left the create channel before the process finished.",
+                    user.Username, user.Id, user.Guild.Name, user.Guild.Id);
+                return;
+            }
+        }
 
         // Remove the abandoned timer if one exists
         gracePeriod.TryStopTimer(state.VoiceChannel, user);
@@ -198,15 +213,22 @@ public class ChannelManager(
             // Clear any orphan timers before deletion
             gracePeriod.TryStopTimer(state.VoiceChannel, user);
 
-            await state.VoiceChannel.DeleteAsync(new()
+            try
             {
-                AuditLogReason = locale.Get("log:delete_empty_channel")
-            });
+                await state.VoiceChannel.DeleteAsync(new()
+                {
+                    AuditLogReason = locale.Get("log:delete_empty_channel")
+                });
 
-            await channels.DeleteAsync(user.Id);
-            logger.LogInformation("Deleting empty dynamic channel {channelName} ({channelId}) in guild {guildName} ({guildId})",
-                state.VoiceChannel.Name, state.VoiceChannel.Id, user.Guild.Name, user.Guild.Id);
-
+                await channels.DeleteAsync(user.Id);
+                logger.LogInformation("Deleting empty dynamic channel {channelName} ({channelId}) in guild {guildName} ({guildId})",
+                    state.VoiceChannel.Name, state.VoiceChannel.Id, user.Guild.Name, user.Guild.Id);
+            } catch (HttpException ex)
+            {
+                // Channel was manually deleted, handled in VoiceStateService
+                if (ex.DiscordCode == DiscordErrorCode.UnknownChannel)
+                    return;
+            }
             return;
         }
 
