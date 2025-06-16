@@ -42,7 +42,7 @@
     },
     "show": {
       "name": "show",
-      "description": "Show this server's current configuration"
+      "description": ""
     },
     "export": {
       "name": "export",
