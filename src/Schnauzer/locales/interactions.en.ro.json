@@ -4,7 +4,7 @@
     "description": "A collection of admin-only configuration commands",
     "automod-toggle": {
       "name": "automod-toggle",
-      "description": "Enable or disable AutoMod checks in channel names",
+      "description": "Activează sau dezactivează verificările AutoMod în numele canalelor",
       "toggle": {
         "name": "toggle",
         "description": "Either enable or disable AutoMod checks",
