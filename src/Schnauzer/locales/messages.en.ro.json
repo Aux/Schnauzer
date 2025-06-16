@@ -78,7 +78,7 @@
         "grace_period_undertime": "The specified grace period duration cannot be less than 5 seconds.",
         "grace_period_overtime": "The specified grace period duration cannot be more than 24 hours.",
         "set_grace_period_success": "The ownership abandonment grace period is now `{0} minute(s)`",
-        "toggle_deny_deafened": "Deafened users are no longer allowed to own dynamic voice channels",
+        "toggle_deny_deafened": "Persoanele surzite nu mai au permis sa aibă un canal de voce dinamic",
         "toggle_allow_deafened": "Deafened users are now able to own dynamic voice channels",
         "toggle_deny_muted": "Muted users are no longer allowed to own dynamic voice channels",
         "toggle_allow_muted": "Muted users are now able to own dynamic voice channels",
