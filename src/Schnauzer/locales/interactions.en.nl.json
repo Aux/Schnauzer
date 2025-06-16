@@ -1,0 +1,192 @@
+{
+  "config": {
+    "name": "config",
+    "description": "A collection of admin-only configuration commands",
+    "automod-toggle": {
+      "name": "automod-toggle",
+      "description": "Enable or disable AutoMod checks in channel names",
+      "toggle": {
+        "name": "toggle",
+        "description": "Either enable or disable AutoMod checks",
+        "Enable": {
+          "name": "Enable"
+        },
+        "Disable": {
+          "name": "Disable"
+        }
+      }
+    },
+    "automod-logto": {
+      "name": "automod-logto",
+      "description": "Set the channel to log AutoMod violations to",
+      "channel": {
+        "name": "channel",
+        "description": "The channel to send messages to, omit to disable"
+      }
+    },
+    "automod-add": {
+      "name": "automod-add",
+      "description": "Add AutoMod rule",
+      "rule": {
+        "name": "rule",
+        "description": "rule"
+      }
+    },
+    "automod-remove": {
+      "name": "automod-remove",
+      "description": "Remove AutoMod rule",
+      "rule": {
+        "name": "rule",
+        "description": "rule"
+      }
+    },
+    "show": {
+      "name": "show",
+      "description": "Show this server's current configuration"
+    },
+    "export": {
+      "name": "export",
+      "description": "Export this server's config as a json file."
+    },
+    "import": {
+      "name": "import",
+      "description": "Modify this server's configuration by uploading a json config file.",
+      "attachment": {
+        "name": "attachment",
+        "description": "attachment"
+      }
+    },
+    "create-channel": {
+      "name": "create-channel",
+      "description": "Set the voice channel users will join to create a dynamic voice channel",
+      "channel": {
+        "name": "channel",
+        "description": "The voice channel users will join"
+      }
+    },
+    "default-lobby-size": {
+      "name": "default-lobby-size",
+      "description": "Set the default user limit when a new dynamic channel is created",
+      "size": {
+        "name": "size",
+        "description": "The default number of users allowed to join a channel, set to 0 for unlimited."
+      }
+    },
+    "max-lobby-size": {
+      "name": "max-lobby-size",
+      "description": "Set the maximum number of users that can join a dynamic channel",
+      "size": {
+        "name": "size",
+        "description": "The max number of users allowed to join a channel, set to 0 for unlimited."
+      }
+    },
+    "max-lobby-count": {
+      "name": "max-lobby-count",
+      "description": "Set the maximum number of dynamic channels that can exist in your server",
+      "count": {
+        "name": "count",
+        "description": "The max number of dynamic channels, set to 0 for unlimited."
+      }
+    },
+    "set-grace-period": {
+      "name": "set-grace-period",
+      "description": "Set the amount of time to wait before considering a voice channel abandoned.",
+      "duration": {
+        "name": "duration",
+        "description": "duration"
+      }
+    },
+    "deafened-toggle": {
+      "name": "deafened-toggle",
+      "description": "Enable or disable allowing server deafened users to own channels",
+      "toggle": {
+        "name": "toggle",
+        "description": "Either enable or disable AutoMod checks",
+        "Enable": {
+          "name": "Enable"
+        },
+        "Disable": {
+          "name": "Disable"
+        }
+      }
+    },
+    "muted-toggle": {
+      "name": "muted-toggle",
+      "description": "Enable or disable allowing server muted users to own channels",
+      "toggle": {
+        "name": "toggle",
+        "description": "Either allow or deny server muted ownership",
+        "Allow": {
+          "name": "Allow"
+        },
+        "Deny": {
+          "name": "Deny"
+        }
+      }
+    },
+    "add-ownership-role": {
+      "name": "add-ownership-role",
+      "description": "Add a role for users that are allowed to own a dynamic channel",
+      "role": {
+        "name": "role",
+        "description": "The default number of users allowed to join a channel, set to 0 for unlimited."
+      }
+    },
+    "remove-ownership-role": {
+      "name": "remove-ownership-role",
+      "description": "Remove a role for users that are allowed to own a dynamic channel",
+      "role": {
+        "name": "role",
+        "description": "role"
+      }
+    }
+  },
+  "voice": {
+    "name": "voice",
+    "description": "Management commands for channel owners.",
+    "limit": {
+      "name": "limit",
+      "description": "Change the user limit for a voice channel you own.",
+      "limit": {
+        "name": "limit",
+        "description": "The max number of users that can join this channel, must be between 1 and 99, set to 0 for infinite."
+      }
+    },
+    "locale": {
+      "name": "locale",
+      "description": "Set the locale for a voice channel you own",
+      "locale": {
+        "name": "locale",
+        "description": "The locale to set your voice channel responses to"
+      }
+    },
+    "rename": {
+      "name": "rename",
+      "description": "Rename a voice channel you own.",
+      "new-name": {
+        "name": "new-name",
+        "description": "The new name of your channel, must be between 1 and 50 characters long."
+      }
+    },
+    "transfer": {
+      "name": "transfer",
+      "description": "Transfer ownership of a voice channel you own to another user.",
+      "user": {
+        "name": "user",
+        "description": "Select a user in your voice channel to transfer ownership to"
+      }
+    }
+  },
+  "about": {
+    "name": "about",
+    "description": "Get some information about Schnauzer"
+  },
+  "claim": {
+    "name": "claim",
+    "description": "Claim ownership of an abandoned channel.",
+    "channel": {
+      "name": "channel",
+      "description": "channel"
+    }
+  }
+}
